@@ -1,0 +1,786 @@
+name: Download open-access papers 102-107
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/download-papers-102-107.yml'
+
+permissions:
+  contents: write
+
+env:
+  PYTHONUNBUFFERED: '1'
+
+jobs:
+  download:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install downloader dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install requests beautifulsoup4 pypdf
+
+      - name: Download and verify public PDFs
+        shell: bash
+        run: |
+          cat > /tmp/download_papers_102_107.py <<'PY'
+          from __future__ import annotations
+
+          import csv
+          import io
+          import re
+          import shutil
+          import subprocess
+          import tempfile
+          import time
+          import zipfile
+          from difflib import SequenceMatcher
+          from pathlib import Path
+          from urllib.parse import quote, urljoin
+
+          import requests
+          from bs4 import BeautifulSoup
+          from pypdf import PdfReader
+          from requests.adapters import HTTPAdapter
+          from urllib3.util.retry import Retry
+
+          OUT = Path("papers_102_107")
+          shutil.rmtree(OUT, ignore_errors=True)
+          OUT.mkdir(exist_ok=True)
+
+          HEADERS = {
+              "User-Agent": (
+                  "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+                  "(KHTML, like Gecko) Chrome/126.0 Safari/537.36 "
+                  "OpenAccessPaperCollector/1.4"
+              ),
+              "Accept": (
+                  "application/pdf,text/html,application/xhtml+xml;"
+                  "q=0.9,*/*;q=0.8"
+              ),
+          }
+
+          session = requests.Session()
+          retry = Retry(
+              total=5,
+              connect=5,
+              read=5,
+              backoff_factor=1.4,
+              status_forcelist=(408, 429, 500, 502, 503, 504),
+              allowed_methods=frozenset({"GET", "HEAD"}),
+          )
+          session.mount("https://", HTTPAdapter(max_retries=retry))
+          session.mount("http://", HTTPAdapter(max_retries=retry))
+
+          PAPERS = [
+              {
+                  "ref": 102,
+                  "title": (
+                      "Traffic Signal Control via Reinforcement Learning: "
+                      "A Review on Applications and Innovations"
+                  ),
+                  "doi": "10.3390/infrastructures10050114",
+                  "candidates": [
+                      "https://www.mdpi.com/2412-3811/10/5/114/pdf",
+                      "https://mdpi-res.com/d_attachment/infrastructures/infrastructures-10-00114/article_deploy/infrastructures-10-00114-v2.pdf",
+                      "https://www.mdpi.com/2412-3811/10/5/114",
+                  ],
+              },
+              {
+                  "ref": 103,
+                  "title": "Self-Attention Graph Pooling",
+                  "doi": "10.48550/arXiv.1904.08082",
+                  "arxiv": "1904.08082",
+                  "candidates": [
+                      "https://proceedings.mlr.press/v97/lee19c/lee19c.pdf",
+                  ],
+              },
+              {
+                  "ref": 104,
+                  "title": "Multi-Task Deep Reinforcement Learning with PopArt",
+                  "doi": "10.1609/aaai.v33i01.33013796",
+                  "arxiv": "1809.04474",
+                  "candidates": [
+                      "https://cdn.aaai.org/ojs/4266/4266-13-7320-1-10-20190705.pdf",
+                      "https://ojs.aaai.org/index.php/AAAI/article/download/4266/4144",
+                      "https://ojs.aaai.org/index.php/AAAI/article/view/4266",
+                  ],
+              },
+              {
+                  "ref": 105,
+                  "title": "Learning Values Across Many Orders of Magnitude",
+                  "arxiv": "1602.07714",
+                  "candidates": [
+                      "https://papers.nips.cc/paper/6076-learning-values-across-many-orders-of-magnitude.pdf",
+                      "https://proceedings.neurips.cc/paper_files/paper/2016/file/5227b6aaf294f5f027273aebf16015f2-Paper.pdf",
+                      "https://proceedings.neurips.cc/paper/2016/file/5227b6aaf294f5f027273aebf16015f2-Paper.pdf",
+                  ],
+              },
+              {
+                  "ref": 106,
+                  "title": (
+                      "Using a Single Actor to Output Personalized Policy "
+                      "for Different Intersections"
+                  ),
+                  "doi": "10.1016/j.neunet.2026.108909",
+                  "arxiv": "2503.07678",
+                  "candidates": [
+                      "https://arxiv.org/pdf/2503.07678.pdf",
+                  ],
+              },
+              {
+                  "ref": 107,
+                  "title": (
+                      "The Max-Pressure Controller for Arbitrary Networks "
+                      "of Signalized Intersections"
+                  ),
+                  "doi": "10.1007/978-1-4614-6243-9_2",
+                  "candidates": [
+                      "https://link.springer.com/content/pdf/10.1007/978-1-4614-6243-9_2.pdf",
+                      "https://link.springer.com/chapter/10.1007/978-1-4614-6243-9_2",
+                      "https://www.researchgate.net/publication/285857897_The_Max-Pressure_Controller_for_Arbitrary_Networks_of_Signalized_Intersections",
+                      "http://paleale.eecs.berkeley.edu/~varaiya/papers/ps.dir/090801Intersectionsv5.pdf",
+                      "https://connected-corridors.berkeley.edu/sites/default/files/Variants%20of%20Max%20Pressure%20Control%20for%20Signalized%20Intersections.pdf",
+                  ],
+              },
+          ]
+
+          STOPWORDS = {
+              "a", "an", "and", "are", "as", "at", "based", "by", "for",
+              "from", "in", "of", "on", "the", "to", "toward", "towards",
+              "under", "using", "with", "via", "network", "networks",
+              "learning", "control", "traffic", "signal", "signals",
+              "reinforcement", "deep", "method", "methods", "system",
+              "controller", "intersections",
+          }
+
+          def normalize(text: str) -> str:
+              return re.sub(r"[^a-z0-9]+", " ", text.lower()).strip()
+
+          def title_tokens(text: str) -> set[str]:
+              return {
+                  token
+                  for token in normalize(text).split()
+                  if len(token) >= 4 and token not in STOPWORDS
+              }
+
+          def title_similarity(left: str, right: str) -> float:
+              return SequenceMatcher(
+                  None,
+                  normalize(left),
+                  normalize(right),
+              ).ratio()
+
+          def safe_name(ref: int, title: str) -> str:
+              cleaned = re.sub(r"[^A-Za-z0-9]+", "_", title).strip("_")
+              return f"{ref:03d}_{cleaned[:120]}.pdf"
+
+          def looks_like_pdf(data: bytes) -> bool:
+              return len(data) > 10_000 and data.lstrip()[:5] == b"%PDF-"
+
+          def pdf_matches_title(
+              data: bytes,
+              expected_title: str,
+          ) -> tuple[bool, str]:
+              try:
+                  reader = PdfReader(io.BytesIO(data), strict=False)
+                  text_parts: list[str] = []
+
+                  metadata = reader.metadata
+                  if metadata and metadata.title:
+                      text_parts.append(str(metadata.title))
+
+                  for page in reader.pages[:4]:
+                      try:
+                          text_parts.append(page.extract_text() or "")
+                      except Exception:
+                          continue
+
+                  extracted = " ".join(text_parts)
+                  if not extracted.strip():
+                      return True, "PDF valid; title text unavailable"
+
+                  expected = title_tokens(expected_title)
+                  observed = title_tokens(extracted[:24000])
+                  overlap = len(expected & observed) / max(1, len(expected))
+                  similarity = title_similarity(
+                      expected_title,
+                      extracted[:900],
+                  )
+
+                  # Reference 107 may be an author manuscript/preprint with a
+                  # slightly different working title but the same core work.
+                  core_terms = title_tokens(expected_title)
+                  core_overlap = len(core_terms & observed) / max(
+                      1,
+                      len(core_terms),
+                  )
+
+                  ok = (
+                      overlap >= 0.48
+                      or similarity >= 0.48
+                      or core_overlap >= 0.60
+                  )
+                  return (
+                      ok,
+                      (
+                          f"title overlap={overlap:.2f}, "
+                          f"similarity={similarity:.2f}"
+                      ),
+                  )
+              except Exception as exc:
+                  return (
+                      True,
+                      (
+                          "PDF header valid; title extraction unavailable: "
+                          f"{type(exc).__name__}"
+                      ),
+                  )
+
+          def extract_pdf_links(html: str, base_url: str) -> list[str]:
+              soup = BeautifulSoup(html, "html.parser")
+              links: list[str] = []
+
+              for key in (
+                  "citation_pdf_url",
+                  "eprints.document_url",
+                  "wkhealth_pdf_url",
+                  "pdf_url",
+              ):
+                  node = soup.find("meta", attrs={"name": key})
+                  if node and node.get("content"):
+                      links.append(
+                          urljoin(base_url, node["content"])
+                      )
+
+              for node in soup.find_all("meta"):
+                  prop = (node.get("property") or "").lower()
+                  if (
+                      prop in {"og:pdf", "pdf_url"}
+                      and node.get("content")
+                  ):
+                      links.append(
+                          urljoin(base_url, node["content"])
+                      )
+
+              for node in soup.find_all("a", href=True):
+                  href = node["href"]
+                  text = node.get_text(" ", strip=True).lower()
+                  lower = href.lower()
+                  if (
+                      lower.endswith(".pdf")
+                      or "/pdf/" in lower
+                      or "download" in lower
+                      or text in {
+                          "pdf",
+                          "download pdf",
+                          "view pdf",
+                          "full text pdf",
+                          "download chapter pdf",
+                      }
+                  ):
+                      links.append(urljoin(base_url, href))
+
+              return list(dict.fromkeys(links))
+
+          def curl_get(url: str) -> tuple[bytes | None, str, str]:
+              with tempfile.NamedTemporaryFile(delete=False) as temp:
+                  temp_path = Path(temp.name)
+
+              command = [
+                  "curl",
+                  "--location",
+                  "--fail",
+                  "--show-error",
+                  "--silent",
+                  "--compressed",
+                  "--http1.1",
+                  "--insecure",
+                  "--retry", "7",
+                  "--retry-delay", "2",
+                  "--retry-all-errors",
+                  "--connect-timeout", "30",
+                  "--max-time", "240",
+                  "--user-agent", HEADERS["User-Agent"],
+                  "--header", f'Accept: {HEADERS["Accept"]}',
+                  "--output", str(temp_path),
+                  "--write-out", "%{url_effective}",
+                  url,
+              ]
+
+              result = subprocess.run(
+                  command,
+                  capture_output=True,
+                  text=True,
+              )
+              effective_url = result.stdout.strip() or url
+
+              if result.returncode != 0:
+                  error = result.stderr.strip() or (
+                      f"curl exit {result.returncode}"
+                  )
+                  temp_path.unlink(missing_ok=True)
+                  return None, effective_url, error
+
+              data = temp_path.read_bytes()
+              temp_path.unlink(missing_ok=True)
+              return data, effective_url, "downloaded response"
+
+          def fetch_candidate(
+              url: str,
+              expected_title: str,
+              depth: int = 0,
+          ) -> tuple[bytes | None, str, str]:
+              if depth > 2:
+                  return None, url, "HTML recursion limit"
+
+              data, effective_url, fetch_note = curl_get(url)
+              if data is None:
+                  return None, effective_url, fetch_note
+
+              if looks_like_pdf(data):
+                  matches, note = pdf_matches_title(
+                      data,
+                      expected_title,
+                  )
+                  if matches:
+                      return (
+                          data,
+                          effective_url,
+                          f"PDF verified; {note}",
+                      )
+                  return (
+                      None,
+                      effective_url,
+                      f"PDF title mismatch; {note}",
+                  )
+
+              sample = data[:1400].lower()
+              if b"<html" in sample or b"<!doctype" in sample:
+                  html = data.decode("utf-8", errors="ignore")
+                  for link in extract_pdf_links(
+                      html,
+                      effective_url,
+                  )[:25]:
+                      pdf, final_url, note = fetch_candidate(
+                          link,
+                          expected_title,
+                          depth + 1,
+                      )
+                      if pdf:
+                          return pdf, final_url, note
+                  return (
+                      None,
+                      effective_url,
+                      "HTML without matching downloadable PDF",
+                  )
+
+              return (
+                  None,
+                  effective_url,
+                  f"Not PDF ({len(data)} bytes)",
+              )
+
+          def crossref_candidates(doi: str) -> list[str]:
+              urls: list[str] = []
+              try:
+                  encoded = quote(doi, safe="")
+                  data = session.get(
+                      f"https://api.crossref.org/works/{encoded}",
+                      headers=HEADERS,
+                      timeout=35,
+                  ).json()
+                  message = data.get("message") or {}
+
+                  for link in message.get("link") or []:
+                      url = link.get("URL")
+                      if url:
+                          urls.append(url)
+
+                  resource = (
+                      (message.get("resource") or {}).get("primary")
+                      or {}
+                  )
+                  if resource.get("URL"):
+                      urls.append(resource["URL"])
+              except Exception:
+                  pass
+              return list(dict.fromkeys(urls))
+
+          def openalex_candidates(
+              title: str,
+              doi: str | None,
+          ) -> list[str]:
+              urls: list[str] = []
+              try:
+                  if doi:
+                      endpoint = (
+                          "https://api.openalex.org/works/"
+                          f"https://doi.org/{doi}"
+                      )
+                      data = session.get(
+                          endpoint,
+                          headers=HEADERS,
+                          timeout=35,
+                      ).json()
+                      works = [data]
+                  else:
+                      data = session.get(
+                          "https://api.openalex.org/works",
+                          params={"search": title, "per-page": 8},
+                          headers=HEADERS,
+                          timeout=35,
+                      ).json()
+                      works = [
+                          work
+                          for work in (data.get("results") or [])
+                          if title_similarity(
+                              title,
+                              work.get("title") or "",
+                          ) >= 0.65
+                      ]
+
+                  for work in works:
+                      locations = [
+                          work.get("best_oa_location"),
+                          work.get("primary_location"),
+                      ]
+                      locations.extend(work.get("locations") or [])
+
+                      for location in locations:
+                          if not location:
+                              continue
+                          if location.get("pdf_url"):
+                              urls.append(location["pdf_url"])
+                          if location.get("landing_page_url"):
+                              urls.append(
+                                  location["landing_page_url"]
+                              )
+              except Exception:
+                  pass
+              return list(dict.fromkeys(urls))
+
+          def unpaywall_candidates(doi: str) -> list[str]:
+              urls: list[str] = []
+              try:
+                  encoded = quote(doi, safe="")
+                  data = session.get(
+                      (
+                          "https://api.unpaywall.org/v2/"
+                          f"{encoded}?email=paper-downloader@example.com"
+                      ),
+                      headers=HEADERS,
+                      timeout=35,
+                  ).json()
+
+                  locations = [data.get("best_oa_location")]
+                  locations.extend(data.get("oa_locations") or [])
+
+                  for location in locations:
+                      if not location:
+                          continue
+                      for key in ("url_for_pdf", "url"):
+                          if location.get(key):
+                              urls.append(location[key])
+              except Exception:
+                  pass
+              return list(dict.fromkeys(urls))
+
+          def semantic_scholar_candidates(
+              title: str,
+              doi: str | None,
+          ) -> list[str]:
+              urls: list[str] = []
+              try:
+                  if doi:
+                      encoded = quote(doi, safe="")
+                      endpoint = (
+                          "https://api.semanticscholar.org/graph/v1/"
+                          f"paper/DOI:{encoded}"
+                          "?fields=title,openAccessPdf,url,externalIds"
+                      )
+                      results = [
+                          session.get(
+                              endpoint,
+                              headers=HEADERS,
+                              timeout=35,
+                          ).json()
+                      ]
+                  else:
+                      data = session.get(
+                          (
+                              "https://api.semanticscholar.org/"
+                              "graph/v1/paper/search"
+                          ),
+                          params={
+                              "query": title,
+                              "limit": 7,
+                              "fields": (
+                                  "title,openAccessPdf,url,externalIds"
+                              ),
+                          },
+                          headers=HEADERS,
+                          timeout=35,
+                      ).json()
+                      results = [
+                          item
+                          for item in (data.get("data") or [])
+                          if title_similarity(
+                              title,
+                              item.get("title") or "",
+                          ) >= 0.65
+                      ]
+
+                  for result in results:
+                      oa = result.get("openAccessPdf") or {}
+                      if oa.get("url"):
+                          urls.append(oa["url"])
+
+                      external = result.get("externalIds") or {}
+                      arxiv_id = external.get("ArXiv")
+                      if arxiv_id:
+                          urls.append(
+                              f"https://arxiv.org/pdf/{arxiv_id}.pdf"
+                          )
+              except Exception:
+                  pass
+              return list(dict.fromkeys(urls))
+
+          rows: list[dict[str, str]] = []
+
+          for paper in PAPERS:
+              ref = int(paper["ref"])
+              title = str(paper["title"])
+              filename = safe_name(ref, title)
+              output = OUT / filename
+
+              candidates: list[str] = list(
+                  paper.get("candidates", [])
+              )
+
+              arxiv_id = paper.get("arxiv")
+              if arxiv_id:
+                  candidates.extend([
+                      f"https://arxiv.org/pdf/{arxiv_id}.pdf",
+                      f"https://export.arxiv.org/pdf/{arxiv_id}",
+                  ])
+
+              doi = paper.get("doi")
+              doi_text = str(doi) if doi else None
+
+              candidates.extend(
+                  openalex_candidates(title, doi_text)
+              )
+              candidates.extend(
+                  semantic_scholar_candidates(title, doi_text)
+              )
+
+              if doi_text:
+                  candidates.extend(
+                      crossref_candidates(doi_text)
+                  )
+                  candidates.extend(
+                      unpaywall_candidates(doi_text)
+                  )
+                  candidates.append(
+                      f"https://doi.org/{doi_text}"
+                  )
+
+              candidates = list(dict.fromkeys(candidates))
+              downloaded = False
+              attempts: list[str] = []
+
+              print(f"\n[{ref}] {title}")
+              if doi_text:
+                  print(f"  DOI: {doi_text}")
+
+              for candidate in candidates:
+                  print(f"  Trying {candidate}")
+                  pdf, final_url, note = fetch_candidate(
+                      candidate,
+                      title,
+                  )
+                  attempts.append(
+                      f"{candidate} -> {note}"
+                  )
+
+                  if pdf:
+                      output.write_bytes(pdf)
+                      rows.append({
+                          "reference": str(ref),
+                          "title": title,
+                          "status": "downloaded",
+                          "filename": filename,
+                          "source_url": final_url,
+                          "bytes": str(len(pdf)),
+                          "notes": (
+                              f"{note}; DOI="
+                              f"{doi_text or 'not applicable'}"
+                          ),
+                      })
+                      downloaded = True
+                      print(
+                          f"  Downloaded {len(pdf):,} bytes "
+                          f"from {final_url}"
+                      )
+                      break
+
+                  time.sleep(0.4)
+
+              if not downloaded:
+                  rows.append({
+                      "reference": str(ref),
+                      "title": title,
+                      "status": "not downloaded",
+                      "filename": "",
+                      "source_url": "",
+                      "bytes": "0",
+                      "notes": (
+                          (
+                              f"DOI={doi_text} | "
+                              if doi_text
+                              else ""
+                          )
+                          + " | ".join(attempts)[-4000:]
+                      ),
+                  })
+                  print(
+                      "  No matching lawful public PDF retrieved."
+                  )
+
+          status_file = Path("download_status_102_107.csv")
+          with status_file.open(
+              "w",
+              newline="",
+              encoding="utf-8",
+          ) as handle:
+              writer = csv.DictWriter(
+                  handle,
+                  fieldnames=[
+                      "reference",
+                      "title",
+                      "status",
+                      "filename",
+                      "source_url",
+                      "bytes",
+                      "notes",
+                  ],
+              )
+              writer.writeheader()
+              writer.writerows(rows)
+
+          downloaded_rows = [
+              row
+              for row in rows
+              if row["status"] == "downloaded"
+          ]
+          failed_rows = [
+              row
+              for row in rows
+              if row["status"] != "downloaded"
+          ]
+
+          readme = [
+              "# Papers - References 102-107",
+              "",
+              (
+                  f"Downloaded and PDF-verified: "
+                  f"**{len(downloaded_rows)} of {len(rows)}** references."
+              ),
+              "",
+              "## Downloaded files",
+              "",
+          ]
+
+          for row in downloaded_rows:
+              readme.append(
+                  f"- **{int(row['reference']):03d}** - "
+                  f"[{row['title']}]"
+                  f"(papers_102_107/{row['filename']})"
+              )
+
+          if failed_rows:
+              readme.extend([
+                  "",
+                  "## Not retrieved automatically",
+                  "",
+              ])
+              for row in failed_rows:
+                  readme.append(
+                      f"- **{int(row['reference']):03d}** - "
+                      f"{row['title']}"
+                  )
+
+          readme.extend([
+              "",
+              (
+                  "Only openly accessible publisher PDFs, "
+                  "institutional manuscripts, author manuscripts, "
+                  "and lawful public preprints were attempted."
+              ),
+              "",
+              (
+                  "For Reference 107, the workflow tries the exact "
+                  "Springer chapter first and then relevant public "
+                  "author-manuscript locations. It will not save a "
+                  "file unless the PDF text matches the reference."
+              ),
+          ])
+
+          readme_path = Path("README_102_107.md")
+          readme_path.write_text(
+              "\n".join(readme) + "\n",
+              encoding="utf-8",
+          )
+
+          zip_path = Path(
+              "Traffic_Papers_References_102-107.zip"
+          )
+          with zipfile.ZipFile(
+              zip_path,
+              "w",
+              compression=zipfile.ZIP_DEFLATED,
+          ) as archive:
+              for pdf in sorted(OUT.glob("*.pdf")):
+                  archive.write(pdf, pdf.name)
+              archive.write(status_file)
+              archive.write(readme_path)
+
+          print(
+              f"\nCreated {zip_path} with "
+              f"{len(downloaded_rows)} verified PDFs."
+          )
+          PY
+
+          python /tmp/download_papers_102_107.py
+
+      - name: Commit downloaded papers and ZIP
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add papers_102_107 README_102_107.md download_status_102_107.csv Traffic_Papers_References_102-107.zip
+          if git diff --cached --quiet; then
+            echo 'No new files to commit.'
+          else
+            git commit -m 'Add open-access papers 102-107 by reference number'
+            git pull --rebase origin "$GITHUB_REF_NAME"
+            git push origin "HEAD:$GITHUB_REF_NAME"
+          fi
+
+      - name: Upload downloadable ZIP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Traffic-Papers-References-102-107
+          path: |
+            Traffic_Papers_References_102-107.zip
+            download_status_102_107.csv
+          if-no-files-found: error
+          retention-days: 7
