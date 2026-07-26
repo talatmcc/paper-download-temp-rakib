@@ -1,0 +1,298 @@
+name: Repair missing open-access papers 15-35
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/repair-missing-papers-15-35.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install verification dependency
+        run: python -m pip install --upgrade pypdf
+
+      - name: Download five previously missed public PDFs
+        shell: bash
+        run: |
+          cat > /tmp/repair_missing_15_35.py <<'PY'
+          from __future__ import annotations
+
+          import csv
+          import io
+          import re
+          import subprocess
+          import time
+          import zipfile
+          from pathlib import Path
+
+          from pypdf import PdfReader
+
+          OUT = Path("papers_15_35")
+          OUT.mkdir(exist_ok=True)
+
+          PAPERS = [
+              {
+                  "ref": 17,
+                  "title": "A Multivariable Regulator Approach to Traffic-Responsive Network-Wide Signal Control",
+                  "filename": "17_A_Multivariable_Regulator_Approach_to_Traffic_Responsive_Network_Wide_Signal_Control.pdf",
+                  "urls": [
+                      "https://citeseerx.ist.psu.edu/document?doi=294f2a0643a943853213634e7a9cb9e4c88595e8&repid=rep1&type=pdf",
+                      "http://citeseerx.ist.psu.edu/document?doi=294f2a0643a943853213634e7a9cb9e4c88595e8&repid=rep1&type=pdf",
+                  ],
+              },
+              {
+                  "ref": 19,
+                  "title": "Reinforcement Learning in Urban Network Traffic Signal Control: A Systematic Literature Review",
+                  "filename": "19_Reinforcement_Learning_in_Urban_Network_Traffic_Signal_Control_Systematic_Literature_Review.pdf",
+                  "urls": [
+                      "https://osf.io/download/ewxrj_v1",
+                      "https://engrxiv.org/preprint/download/1611/3320/2442",
+                      "https://engrxiv.org/preprint/download/1611/3320",
+                  ],
+              },
+              {
+                  "ref": 21,
+                  "title": "A Survey of Intelligence Methods in Urban Traffic Signal Control",
+                  "filename": "21_A_Survey_of_Intelligence_Methods_in_Urban_Traffic_Signal_Control.pdf",
+                  "urls": [
+                      "https://citeseerx.ist.psu.edu/document?doi=bd596bf0c6d2237f1545297795a0db9762051d9b&repid=rep1&type=pdf",
+                      "http://citeseerx.ist.psu.edu/document?doi=bd596bf0c6d2237f1545297795a0db9762051d9b&repid=rep1&type=pdf",
+                  ],
+              },
+              {
+                  "ref": 31,
+                  "title": "PressLight: Learning Max Pressure Control to Coordinate Traffic Signals in Arterial Network",
+                  "filename": "31_PressLight_Learning_Max_Pressure_Control_to_Coordinate_Traffic_Signals_in_Arterial_Network.pdf",
+                  "urls": [
+                      "https://faculty.ist.psu.edu/jessieli/Publications/2019-KDD-presslight.pdf",
+                  ],
+              },
+              {
+                  "ref": 33,
+                  "title": "Toward A Thousand Lights: Decentralized Deep Reinforcement Learning for Large-Scale Traffic Signal Control",
+                  "filename": "33_Toward_A_Thousand_Lights_Decentralized_Deep_Reinforcement_Learning_for_Large_Scale_Traffic_Signal_Control.pdf",
+                  "urls": [
+                      "https://ojs.aaai.org/index.php/AAAI/article/view/5744/5600",
+                      "https://ojs.aaai.org/index.php/AAAI/article/download/5744/5600",
+                  ],
+              },
+          ]
+
+          STOPWORDS = {
+              "a", "an", "and", "are", "as", "at", "by", "for", "from", "in",
+              "of", "on", "the", "to", "toward", "with", "learning", "traffic",
+              "signal", "control", "network",
+          }
+
+          def tokens(text: str) -> set[str]:
+              return {
+                  word
+                  for word in re.sub(r"[^a-z0-9]+", " ", text.lower()).split()
+                  if len(word) >= 4 and word not in STOPWORDS
+              }
+
+          def is_pdf(path: Path) -> bool:
+              if not path.exists() or path.stat().st_size < 10_000:
+                  return False
+              return path.read_bytes()[:5] == b"%PDF-"
+
+          def title_matches(path: Path, expected_title: str) -> tuple[bool, str]:
+              try:
+                  reader = PdfReader(str(path), strict=False)
+                  text_parts: list[str] = []
+                  if reader.metadata and reader.metadata.title:
+                      text_parts.append(str(reader.metadata.title))
+                  for page in reader.pages[:3]:
+                      try:
+                          text_parts.append(page.extract_text() or "")
+                      except Exception:
+                          pass
+                  observed = tokens(" ".join(text_parts))
+                  expected = tokens(expected_title)
+                  overlap = len(expected & observed) / max(1, len(expected))
+                  return overlap >= 0.50, f"title-token overlap={overlap:.2f}"
+              except Exception as exc:
+                  return True, f"PDF header valid; title extraction unavailable: {type(exc).__name__}"
+
+          def curl_download(url: str, destination: Path) -> tuple[bool, str]:
+              command = [
+                  "curl",
+                  "--location",
+                  "--fail",
+                  "--show-error",
+                  "--silent",
+                  "--compressed",
+                  "--http1.1",
+                  "--insecure",
+                  "--retry", "6",
+                  "--retry-delay", "2",
+                  "--retry-all-errors",
+                  "--connect-timeout", "25",
+                  "--max-time", "210",
+                  "--user-agent",
+                  "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/126 Safari/537.36",
+                  "--header", "Accept: application/pdf,text/html;q=0.9,*/*;q=0.8",
+                  "--output", str(destination),
+                  url,
+              ]
+              result = subprocess.run(command, text=True, capture_output=True)
+              if result.returncode != 0:
+                  destination.unlink(missing_ok=True)
+                  return False, result.stderr.strip() or f"curl exit {result.returncode}"
+              if not is_pdf(destination):
+                  size = destination.stat().st_size if destination.exists() else 0
+                  destination.unlink(missing_ok=True)
+                  return False, f"response was not a valid PDF ({size} bytes)"
+              return True, "valid PDF header"
+
+          results: dict[int, dict[str, str]] = {}
+
+          for paper in PAPERS:
+              ref = int(paper["ref"])
+              title = str(paper["title"])
+              final_path = OUT / str(paper["filename"])
+              temp_path = OUT / f".{ref}.download"
+              attempts: list[str] = []
+
+              print(f"\n[{ref}] {title}")
+              success = False
+              final_url = ""
+              note = ""
+
+              for url in paper["urls"]:
+                  print(f"  Trying {url}")
+                  ok, download_note = curl_download(url, temp_path)
+                  attempts.append(f"{url} -> {download_note}")
+                  if not ok:
+                      time.sleep(1)
+                      continue
+
+                  matches, verify_note = title_matches(temp_path, title)
+                  if not matches:
+                      attempts.append(f"{url} -> title mismatch ({verify_note})")
+                      temp_path.unlink(missing_ok=True)
+                      continue
+
+                  temp_path.replace(final_path)
+                  success = True
+                  final_url = url
+                  note = f"{download_note}; {verify_note}"
+                  print(f"  Downloaded: {final_path} ({final_path.stat().st_size:,} bytes)")
+                  break
+
+              if success:
+                  results[ref] = {
+                      "reference": str(ref),
+                      "title": title,
+                      "status": "downloaded",
+                      "filename": final_path.name,
+                      "source_url": final_url,
+                      "bytes": str(final_path.stat().st_size),
+                      "notes": note,
+                  }
+              else:
+                  results[ref] = {
+                      "reference": str(ref),
+                      "title": title,
+                      "status": "not downloaded",
+                      "filename": "",
+                      "source_url": "",
+                      "bytes": "0",
+                      "notes": " | ".join(attempts)[-3000:],
+                  }
+                  print("  All fallback URLs failed.")
+
+          status_path = Path("download_status_15_35.csv")
+          fieldnames = [
+              "reference", "title", "status", "filename",
+              "source_url", "bytes", "notes",
+          ]
+
+          existing: list[dict[str, str]] = []
+          if status_path.exists():
+              with status_path.open(newline="", encoding="utf-8") as handle:
+                  existing = list(csv.DictReader(handle))
+
+          existing_by_ref = {
+              int(row["reference"]): row
+              for row in existing
+              if row.get("reference", "").isdigit()
+          }
+          existing_by_ref.update(results)
+
+          with status_path.open("w", newline="", encoding="utf-8") as handle:
+              writer = csv.DictWriter(handle, fieldnames=fieldnames)
+              writer.writeheader()
+              for ref in sorted(existing_by_ref):
+                  writer.writerow(existing_by_ref[ref])
+
+          readme_path = Path("README_15_35.md")
+          downloaded_files = sorted(OUT.glob("*.pdf"))
+          lines = [
+              "# Traffic Papers - References 15-35",
+              "",
+              f"PDF files currently available: **{len(downloaded_files)}**.",
+              "",
+              "## Downloaded files",
+              "",
+          ]
+          for pdf in downloaded_files:
+              ref = pdf.name.split("_", 1)[0]
+              lines.append(f"- **{ref}** - [{pdf.name}](papers_15_35/{pdf.name})")
+          lines.extend([
+              "",
+              "Only publicly accessible publisher copies, institutional manuscripts, "
+              "and lawful preprints were downloaded.",
+              "",
+              "Reference 35 is a copyrighted commercial book and is not included.",
+          ])
+          readme_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+          zip_path = Path("Traffic_Papers_References_15-35.zip")
+          with zipfile.ZipFile(zip_path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+              for pdf in downloaded_files:
+                  archive.write(pdf, pdf.name)
+              archive.write(status_path)
+              archive.write(readme_path)
+
+          successes = sum(row["status"] == "downloaded" for row in results.values())
+          print(f"\nRecovered {successes} of {len(PAPERS)} missing PDFs.")
+          print(f"Rebuilt {zip_path} with {len(downloaded_files)} PDFs.")
+          PY
+
+          python /tmp/repair_missing_15_35.py
+
+      - name: Commit recovered papers
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add papers_15_35 README_15_35.md download_status_15_35.csv Traffic_Papers_References_15-35.zip
+          if git diff --cached --quiet; then
+            echo 'No additional PDFs were recovered.'
+          else
+            git commit -m 'Recover missing open-access papers 15-35'
+            git pull --rebase origin "$GITHUB_REF_NAME"
+            git push origin "HEAD:$GITHUB_REF_NAME"
+          fi
+
+      - name: Upload repaired ZIP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Traffic-Papers-References-15-35-Repaired
+          path: |
+            Traffic_Papers_References_15-35.zip
+            download_status_15_35.csv
+          if-no-files-found: error
+          retention-days: 7
