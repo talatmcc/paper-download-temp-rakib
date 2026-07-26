@@ -1,0 +1,272 @@
+reference,title,status,filename,source_url,bytes,notes
+57,DynSTGAT: Dynamic Spatial-Temporal Graph Attention Network for Traffic Signal Control,not downloaded,,,0,"DOI=10.1145/3459637.3482254 | https://arxiv.org/pdf/2109.05491.pdf -> curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404 | https://export.arxiv.org/pdf/2109.05491 -> curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404 | https://arxiv.org/pdf/2109.05491 -> curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404 | http://arxiv.org/abs/2109.05491 -> HTML without matching downloadable PDF | https://doi.org/10.1145/3459637.3482254 -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403 | https://dl.acm.org/doi/10.1145/3459637.3482254 -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403 | https://dl.acm.org/doi/pdf/10.1145/3459637.3482254 -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403"
+59,EGAT: Edge-Featured Graph Attention Network,likely paywalled; no verified public copy found,,,0,DOI=10.1007/978-3-030-86362-3_21 | https://link.springer.com/content/pdf/10.1007/978-3-030-86362-3_21.pdf -> HTML without matching downloadable PDF | https://link.springer.com/chapter/10.1007/978-3-030-86362-3_21 -> HTML without matching downloadable PDF | https://doi.org/10.1007/978-3-030-86362-3_21 -> HTML without matching downloadable PDF | https://link.springer.com/content/pdf/10.1007/978-3-030-86362-3_21 -> HTML without matching downloadable PDF | https://link.springer.com/10.1007/978-3-030-86362-3_21 -> HTML without matching downloadable PDF
+61,A Graph Deep Reinforcement Learning Traffic Signal Control for Multiple Intersections Considering Missing Data,likely paywalled; no verified public copy found,,,0,DOI=10.1109/TVT.2024.3444475 | https://doi.org/10.1109/tvt.2024.3444475 -> HTML without matching downloadable PDF | http://xplorestaging.ieee.org/ielx8/25/10807699/10637721.pdf?arnumber=10637721 -> HTML without matching downloadable PDF | https://ieeexplore.ieee.org/document/10637721/ -> HTML without matching downloadable PDF | https://doi.org/10.1109/TVT.2024.3444475 -> HTML without matching downloadable PDF
+62,Traffic Signal Timing via Deep Reinforcement Learning,not downloaded,,,0,"DOI=10.1109/JAS.2016.7508798 | https://www.ieee-jas.com/fileZDHXBEN/journal/article/zdhxbywb/2016/3/PDF/20160303.pdf -> curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404 | https://jas.ia.ac.cn/fileZDHXBEN/journal/article/zdhxbywb/2016/3/PDF/20160303.pdf -> curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404 | https://www.ieee-jas.com/article/id/c5bdbe80-d3b0-4a3d-b34e-1420cf2f77cd -> HTML without matching downloadable PDF | https://doi.org/10.1109/jas.2016.7508798 -> HTML without matching downloadable PDF | http://xplorestaging.ieee.org/ielx7/6570654/7508793/07508798.pdf?arnumber=7508798 -> HTML without matching downloadable PDF | https://ieeexplore.ieee.org/document/7508798/ -> HTML without matching downloadable PDF | https://doi.org/10.1109/JAS.2016.7508798 -> HTML without matching downloadable PDF"
+64,Dueling Double Deep Q-Network for Adaptive Traffic Signal Control with Low Exhaust Emissions in a Single Intersection,not downloaded,,,0,DOI=10.1088/1757-899X/612/5/052039 | https://iopscience.iop.org/article/10.1088/1757-899X/612/5/052039/pdf -> Not PDF (14375 bytes) | https://iopscience.iop.org/article/10.1088/1757-899X/612/5/052039 -> Not PDF (14375 bytes) | https://doi.org/10.1088/1757-899x/612/5/052039 -> Not PDF (14375 bytes) | https://doi.org/10.1088/1757-899X/612/5/052039 -> Not PDF (14375 bytes)
+65,Intelligent Traffic Signal Control with Deep Reinforcement Learning at Single Intersection,likely paywalled; no verified public copy found,,,0,"DOI=10.1145/3467707.3467767 | https://doi.org/10.1145/3467707.3467767 -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403 | https://dl.acm.org/doi/10.1145/3467707.3467767 -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403 | https://dl.acm.org/doi/pdf/10.1145/3467707.3467767 -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403"
+66,Deep Deterministic Policy Gradient for Traffic Signal Control of Single Intersection,likely paywalled; no verified public copy found,,,0,DOI=10.1109/CCDC.2019.8832406 | https://doi.org/10.1109/ccdc.2019.8832406 -> HTML without matching downloadable PDF | http://xplorestaging.ieee.org/ielx7/8822348/8832328/08832406.pdf?arnumber=8832406 -> HTML without matching downloadable PDF | https://ieeexplore.ieee.org/document/8832406/ -> HTML without matching downloadable PDF | https://doi.org/10.1109/CCDC.2019.8832406 -> HTML without matching downloadable PDF
+68,Vehicle-Level Fairness-Oriented Constrained Multi-Agent Reinforcement Learning for Adaptive Traffic Signal Control,likely paywalled; no verified public copy found,,,0,DOI=10.1109/TITS.2025.3544223 | https://doi.org/10.1109/tits.2025.3544223 -> HTML without matching downloadable PDF | http://xplorestaging.ieee.org/ielx8/6979/10945245/10907776.pdf?arnumber=10907776 -> HTML without matching downloadable PDF | https://ieeexplore.ieee.org/document/10907776/ -> HTML without matching downloadable PDF | https://doi.org/10.1109/TITS.2025.3544223 -> HTML without matching downloadable PDF
+71,A Spatial-Temporal Graph Attention Network for Multi-Intersection Traffic Light Control,likely paywalled; no verified public copy found,,,0,DOI=10.1109/IJCNN52387.2021.9533335 | https://figshare.com/articles/conference_contribution/A_Spatial-Temporal_Graph_Attention_Network_for_Multi-intersection_Traffic_Light_Control/20641563 -> HTML without matching downloadable PDF | https://doi.org/10.1109/ijcnn52387.2021.9533335 -> HTML without matching downloadable PDF | http://doi.org/10.1109/IJCNN52387.2021.9533335 -> HTML without matching downloadable PDF | http://xplorestaging.ieee.org/ielx7/9533266/9533267/09533335.pdf?arnumber=9533335 -> HTML without matching downloadable PDF | https://ieeexplore.ieee.org/document/9533335/ -> HTML without matching downloadable PDF | https://doi.org/10.1109/IJCNN52387.2021.9533335 -> HTML without matching downloadable PDF
+72,Meta-Learning Based Spatial-Temporal Graph Attention Network for Traffic Signal Control,likely paywalled; no verified public copy found,,,0,"DOI=10.1016/j.knosys.2022.109166 | https://doi.org/10.1016/j.knosys.2022.109166 -> HTML without matching downloadable PDF | https://api.elsevier.com/content/article/PII:S0950705122005809?httpAccept=text/xml -> Not PDF (1840 bytes) | https://api.elsevier.com/content/article/PII:S0950705122005809?httpAccept=text/plain -> curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400 | https://linkinghub.elsevier.com/retrieve/pii/S0950705122005809 -> HTML without matching downloadable PDF"
+73,A Deep Reinforcement Learning Framework with Memory Network to Coordinate Traffic Signal Control,likely paywalled; no verified public copy found,,,0,"DOI=10.1109/ITSC55140.2022.9921752 | https://doi.org/10.1109/itsc55140.2022.9921752 -> HTML without matching downloadable PDF | https://ro.uow.edu.au/test2021/7419 -> curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404 | http://xplorestaging.ieee.org/ielx7/9921415/9921739/09921752.pdf?arnumber=9921752 -> HTML without matching downloadable PDF | https://ieeexplore.ieee.org/document/9921752/ -> HTML without matching downloadable PDF | https://doi.org/10.1109/ITSC55140.2022.9921752 -> HTML without matching downloadable PDF"
+76,Learning Traffic Signal Control from Demonstrations,downloaded,076_Learning_Traffic_Signal_Control_from_Demonstrations.pdf,https://faculty.ist.psu.edu/jessieli/Publications/2019-CIKM-demoLight.pdf,757074,"PDF verified; title overlap=1.00, similarity=0.11; DOI=10.1145/3357384.3358079"
+77,Time Critic Policy Gradient Methods for Traffic Signal Control in Complex and Congested Scenarios,likely paywalled; no verified public copy found,,,0,"DOI=10.1145/3292500.3330988 | https://doi.org/10.1145/3292500.3330988 -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403 | https://dl.acm.org/doi/10.1145/3292500.3330988 -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403 | https://dl.acm.org/doi/pdf/10.1145/3292500.3330988 -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403"
+79,A Novel Reinforcement Learning-Based Cooperative Traffic Signal System Through Max-Pressure Control,likely paywalled; no verified public copy found,,,0,DOI=10.1109/TVT.2021.3069921 | https://doi.org/10.1109/tvt.2021.3069921 -> HTML without matching downloadable PDF | http://xplorestaging.ieee.org/ielx7/25/9713736/09392372.pdf?arnumber=9392372 -> HTML without matching downloadable PDF | https://ieeexplore.ieee.org/document/9392372/ -> HTML without matching downloadable PDF | https://doi.org/10.1109/TVT.2021.3069921 -> HTML without matching downloadable PDF
+82,Adaptive Coordinated Traffic Control for Arterial Intersections Based on Reinforcement Learning,likely paywalled; no verified public copy found,,,0,DOI=10.1109/itsc48978.2021.9564664 | https://doi.org/10.1109/itsc48978.2021.9564664 -> HTML without matching downloadable PDF | http://xplorestaging.ieee.org/ielx7/9564393/9564395/09564664.pdf?arnumber=9564664 -> HTML without matching downloadable PDF | https://ieeexplore.ieee.org/document/9564664/ -> HTML without matching downloadable PDF
+83,Developing Adaptive Traffic Signal Control by Actor-Critic and Direct Exploration Methods,likely paywalled; no verified public copy found,,,0,"DOI=10.1680/jtran.17.00085 | https://hig.diva-portal.org/smash/record.jsf?pid=diva2%3A1256155 -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403 | https://research.rug.nl/en/publications/developing-adaptive-traffic-signal-control-by-actor-critic-and-di/ -> HTML without matching downloadable PDF | https://scispace.com/pdf/developing-adaptive-traffic-signal-control-by-actor-critic-25asnrdhyn.pdf -> HTML without matching downloadable PDF | https://www.icevirtuallibrary.com/doi/pdf/10.1680/jtran.17.00085 -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403 | https://doi.org/10.1680/jtran.17.00085 -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403 | https://research.rug.nl/en/publications/0354a130-3496-4ac1-9283-7cb94fbbc1ab -> HTML without matching downloadable PDF | https://hdl.handle.net/11370/0354a130-3496-4ac1-9283-7cb94fbbc1ab -> HTML without matching downloadable PDF | http://www.emerald.com/jtran/article/172/5/289-298/426948 -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403"
+85,Pi-Light: Programmatic Interpretable Reinforcement Learning for Resource-Limited Traffic Signal Control,downloaded,085_Pi_Light_Programmatic_Interpretable_Reinforcement_Learning_for_Resource_Limited_Traffic_Signal_Control.pdf,https://ojs.aaai.org/index.php/AAAI/article/download/30103/31946,297278,"PDF verified; title overlap=1.00, similarity=0.20; DOI=10.1609/aaai.v38i19.30103"
+86,Enhancing Traffic Signal Control with Composite Deep Intelligence,likely paywalled; no verified public copy found,,,0,"DOI=10.1016/j.eswa.2023.123020 | https://doi.org/10.1016/j.eswa.2023.123020 -> HTML without matching downloadable PDF | https://api.elsevier.com/content/article/PII:S0957417423035224?httpAccept=text/xml -> Not PDF (1821 bytes) | https://api.elsevier.com/content/article/PII:S0957417423035224?httpAccept=text/plain -> curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400 | https://linkinghub.elsevier.com/retrieve/pii/S0957417423035224 -> HTML without matching downloadable PDF"
+89,Fuzzy Inference Enabled Deep Reinforcement Learning-Based Traffic Light Control for Intelligent Transportation System,likely paywalled; no verified public copy found,,,0,DOI=10.1109/TITS.2020.2984033 | https://doi.org/10.1109/tits.2020.2984033 -> HTML without matching downloadable PDF | http://xplorestaging.ieee.org/ielx7/6979/9509372/09072340.pdf?arnumber=9072340 -> HTML without matching downloadable PDF | https://ieeexplore.ieee.org/document/9072340/ -> HTML without matching downloadable PDF | https://doi.org/10.1109/TITS.2020.2984033 -> HTML without matching downloadable PDF
+90,Multiple Intersections Traffic Signal Control Based on Cooperative Multi-Agent Reinforcement Learning,downloaded,090_Multiple_Intersections_Traffic_Signal_Control_Based_on_Cooperative_Multi_Agent_Reinforcement_Learning.pdf,https://cronfa.swansea.ac.uk/Record/cronfa64123/Download/64123__28393__f268c75ba03c45f7b733701a1d49c120.pdf,868842,"PDF verified; title overlap=1.00, similarity=0.21; DOI=10.1016/j.ins.2023.119484"
+92,An Experimental Review of Reinforcement Learning Algorithms for Adaptive Traffic Signal Control,likely paywalled; no verified public copy found,,,0,DOI=10.1007/978-3-319-25808-9_4 | https://link.springer.com/content/pdf/10.1007/978-3-319-25808-9_4.pdf -> HTML without matching downloadable PDF | https://link.springer.com/chapter/10.1007/978-3-319-25808-9_4 -> HTML without matching downloadable PDF | https://research.universityofgalway.ie/en/publications/an-experimental-review-of-reinforcement-learning-algorithms-for-a-6/ -> HTML without matching downloadable PDF | https://doi.org/10.1007/978-3-319-25808-9_4 -> HTML without matching downloadable PDF | http://link.springer.com/content/pdf/10.1007/978-3-319-25808-9_4 -> HTML without matching downloadable PDF | http://link.springer.com/10.1007/978-3-319-25808-9_4 -> HTML without matching downloadable PDF
+95,Fairness Control of Traffic Light via Deep Reinforcement Learning,likely paywalled; no verified public copy found,,,0,DOI=10.1109/CASE48305.2020.9216899 | https://doi.org/10.1109/case48305.2020.9216899 -> HTML without matching downloadable PDF | http://xplorestaging.ieee.org/ielx7/9210430/9216730/09216899.pdf?arnumber=9216899 -> HTML without matching downloadable PDF | https://ieeexplore.ieee.org/document/9216899/ -> HTML without matching downloadable PDF | https://doi.org/10.1109/CASE48305.2020.9216899 -> HTML without matching downloadable PDF
+96,Transferable Traffic Signal Control: Reinforcement Learning with Graph Centric State Representation,likely paywalled; no verified public copy found,,,0,"DOI=10.1016/j.trc.2021.103321 | https://doi.org/10.1016/j.trc.2021.103321 -> HTML without matching downloadable PDF | https://api.elsevier.com/content/article/PII:S0968090X21003272?httpAccept=text/xml -> Not PDF (1876 bytes) | https://api.elsevier.com/content/article/PII:S0968090X21003272?httpAccept=text/plain -> curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400 | https://linkinghub.elsevier.com/retrieve/pii/S0968090X21003272 -> HTML without matching downloadable PDF"
+97,Reinforcement Learning for Traffic Signal Control in Hybrid Action Space,likely paywalled; no verified public copy found,,,0,DOI=10.1109/TITS.2023.3344585 | https://doi.org/10.1109/tits.2023.3344585 -> HTML without matching downloadable PDF | http://xplorestaging.ieee.org/ielx7/6979/10543072/10379485.pdf?arnumber=10379485 -> HTML without matching downloadable PDF | https://ieeexplore.ieee.org/document/10379485/ -> HTML without matching downloadable PDF | https://doi.org/10.1109/TITS.2023.3344585 -> HTML without matching downloadable PDF
+98,The Study of Reinforcement Learning for Traffic Self-Adaptive Control under Multiagent Markov Game Environment,not downloaded,,,0,"DOI=10.1155/2013/962869 | https://onlinelibrary.wiley.com/doi/pdf/10.1155/2013/962869 -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403 | https://downloads.hindawi.com/journals/mpe/2013/962869.pdf -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403 | https://doi.org/10.1155/2013/962869 -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403 | http://downloads.hindawi.com/journals/MPE/2013/962869.xml -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403 | http://downloads.hindawi.com/journals/mpe/2013/962869.pdf -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403 | http://downloads.hindawi.com/journals/mpe/2013/962869.xml -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403 | http://www.hindawi.com/journals/mpe/2013/962869/ -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403"
+102,Traffic Signal Control via Reinforcement Learning: A Review on Applications and Innovations,not downloaded,,,0,"DOI=10.3390/infrastructures10050114 | https://www.mdpi.com/2412-3811/10/5/114/pdf -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403 | https://mdpi-res.com/d_attachment/infrastructures/infrastructures-10-00114/article_deploy/infrastructures-10-00114-v2.pdf -> curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404 | https://www.mdpi.com/2412-3811/10/5/114/pdf?version=1746531161 -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403 | https://doi.org/10.3390/infrastructures10050114 -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403 | https://doaj.org/article/04cf2127e1ef4bdbb2dd3899d5e07215 -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403 | https://www.mdpi.com/2412-3811/10/5/114 -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403"
