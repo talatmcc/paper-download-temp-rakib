@@ -1,0 +1,700 @@
+name: Download open-access papers 80-102
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/download-papers-80-102.yml'
+
+permissions:
+  contents: write
+
+env:
+  PYTHONUNBUFFERED: '1'
+
+jobs:
+  download:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install downloader dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install requests beautifulsoup4 pypdf
+
+      - name: Download and verify public PDFs
+        shell: bash
+        run: |
+          cat > /tmp/download_papers_80_102.py <<'PY'
+          from __future__ import annotations
+
+          import csv
+          import io
+          import re
+          import shutil
+          import subprocess
+          import tempfile
+          import time
+          import zipfile
+          from difflib import SequenceMatcher
+          from pathlib import Path
+          from urllib.parse import quote, urljoin
+
+          import requests
+          from bs4 import BeautifulSoup
+          from pypdf import PdfReader
+          from requests.adapters import HTTPAdapter
+          from urllib3.util.retry import Retry
+
+          OUT = Path("papers_80_102")
+          shutil.rmtree(OUT, ignore_errors=True)
+          OUT.mkdir(exist_ok=True)
+
+          HEADERS = {
+              "User-Agent": (
+                  "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+                  "(KHTML, like Gecko) Chrome/126.0 Safari/537.36 "
+                  "OpenAccessPaperCollector/1.3"
+              ),
+              "Accept": "application/pdf,text/html,application/xhtml+xml;q=0.9,*/*;q=0.8",
+          }
+
+          session = requests.Session()
+          retry = Retry(
+              total=4,
+              connect=4,
+              read=4,
+              backoff_factor=1.2,
+              status_forcelist=(429, 500, 502, 503, 504),
+              allowed_methods=frozenset({"GET", "HEAD"}),
+          )
+          session.mount("https://", HTTPAdapter(max_retries=retry))
+          session.mount("http://", HTTPAdapter(max_retries=retry))
+
+          PAPERS = [
+              {
+                  "ref": 80,
+                  "title": "Expression Might Be Enough: Representing Pressure and Demand for Reinforcement Learning Based Traffic Signal Control",
+                  "arxiv": "2112.10107",
+                  "candidates": [
+                      "https://proceedings.mlr.press/v162/zhang22ah/zhang22ah.pdf",
+                  ],
+              },
+              {
+                  "ref": 81,
+                  "title": "AttendLight: Universal Attention-Based Reinforcement Learning Model for Traffic Signal Control",
+                  "arxiv": "2010.05772",
+              },
+              {
+                  "ref": 82,
+                  "title": "Adaptive Coordinated Traffic Control for Arterial Intersections Based on Reinforcement Learning",
+              },
+              {
+                  "ref": 83,
+                  "title": "Developing Adaptive Traffic Signal Control by Actor-Critic and Direct Exploration Methods",
+                  "doi": "10.1680/jtran.17.00085",
+                  "candidates": [
+                      "https://research.rug.nl/en/publications/developing-adaptive-traffic-signal-control-by-actor-critic-and-di/",
+                  ],
+              },
+              {
+                  "ref": 84,
+                  "title": "EMVLight: A Multi-Agent Reinforcement Learning Framework for an Emergency Vehicle Decentralized Routing and Traffic Signal Control System",
+                  "doi": "10.1016/j.trc.2022.103955",
+                  "arxiv": "2206.13441",
+              },
+              {
+                  "ref": 85,
+                  "title": "Pi-Light: Programmatic Interpretable Reinforcement Learning for Resource-Limited Traffic Signal Control",
+                  "doi": "10.1609/aaai.v38i19.30103",
+                  "candidates": [
+                      "https://ojs.aaai.org/index.php/AAAI/article/view/30103",
+                      "https://ojs.aaai.org/index.php/AAAI/article/download/30103",
+                  ],
+              },
+              {
+                  "ref": 86,
+                  "title": "Enhancing Traffic Signal Control with Composite Deep Intelligence",
+                  "doi": "10.1016/j.eswa.2023.123020",
+              },
+              {
+                  "ref": 87,
+                  "title": "Scalable Reinforcement Learning Framework for Traffic Signal Control under Communication Delays",
+              },
+              {
+                  "ref": 88,
+                  "title": "FELight: Fairness-Aware Traffic Signal Control via Sample-Efficient Reinforcement Learning",
+                  "doi": "10.1109/TKDE.2024.3376745",
+                  "candidates": [
+                      "https://bonaldli.github.io/publication/felight/",
+                  ],
+              },
+              {
+                  "ref": 89,
+                  "title": "Fuzzy Inference Enabled Deep Reinforcement Learning-Based Traffic Light Control for Intelligent Transportation System",
+                  "doi": "10.1109/TITS.2020.2984033",
+              },
+              {
+                  "ref": 90,
+                  "title": "Multiple Intersections Traffic Signal Control Based on Cooperative Multi-Agent Reinforcement Learning",
+                  "doi": "10.1016/j.ins.2023.119484",
+              },
+              {
+                  "ref": 91,
+                  "title": "Coordinated Deep Reinforcement Learners for Traffic Light Control",
+                  "candidates": [
+                      "https://www.elisevanderpol.nl/docs/VanDerPol16LICMAS.pdf",
+                      "https://www.elisevanderpol.nl/posts/publication/vanderpol2016c/",
+                  ],
+              },
+              {
+                  "ref": 92,
+                  "title": "An Experimental Review of Reinforcement Learning Algorithms for Adaptive Traffic Signal Control",
+                  "doi": "10.1007/978-3-319-25808-9_4",
+              },
+              {
+                  "ref": 93,
+                  "title": "CoTV: Cooperative Control for Traffic Light Signals and Connected Autonomous Vehicles Using Deep Reinforcement Learning",
+                  "doi": "10.1109/TITS.2023.3276416",
+                  "arxiv": "2201.13143",
+              },
+              {
+                  "ref": 94,
+                  "title": "Network-Wide Traffic Signal Control Optimization Using a Multi-Agent Deep Reinforcement Learning",
+                  "doi": "10.1016/j.trc.2021.103059",
+                  "arxiv": "2104.09936",
+              },
+              {
+                  "ref": 95,
+                  "title": "Fairness Control of Traffic Light via Deep Reinforcement Learning",
+                  "doi": "10.1109/CASE48305.2020.9216899",
+              },
+              {
+                  "ref": 96,
+                  "title": "Transferable Traffic Signal Control: Reinforcement Learning with Graph Centric State Representation",
+                  "doi": "10.1016/j.trc.2021.103321",
+              },
+              {
+                  "ref": 97,
+                  "title": "Reinforcement Learning for Traffic Signal Control in Hybrid Action Space",
+                  "doi": "10.1109/TITS.2023.3344585",
+              },
+              {
+                  "ref": 98,
+                  "title": "The Study of Reinforcement Learning for Traffic Self-Adaptive Control under Multiagent Markov Game Environment",
+              },
+              {
+                  "ref": 99,
+                  "title": "Deep Deterministic Policy Gradient for Urban Traffic Light Control",
+                  "arxiv": "1703.09035",
+              },
+              {
+                  "ref": 100,
+                  "title": "Adaptive Traffic Signal Control with Actor-Critic Methods in a Real-World Traffic Network with Different Traffic Disruption Events",
+                  "doi": "10.1016/j.trc.2017.09.020",
+                  "candidates": [
+                      "https://research.rug.nl/en/publications/adaptive-traffic-signal-control-with-actor-critic-methods-in-a-re/",
+                  ],
+              },
+              {
+                  "ref": 101,
+                  "title": "Traffic Signal Optimization through Discrete and Continuous Reinforcement Learning with Robustness Analysis in Downtown Tehran",
+                  "candidates": [
+                      "https://pure.rug.nl/ws/files/77297698/1_s2.0_S1474034617302598_main.pdf",
+                      "https://research.rug.nl/en/publications/traffic-signal-optimization-through-discrete-and-continuous-reinf/",
+                  ],
+              },
+              {
+                  "ref": 102,
+                  "title": "Traffic Signal Control via Reinforcement Learning: A Review on Applications and Innovations",
+                  "doi": "10.3390/infrastructures10050114",
+                  "candidates": [
+                      "https://www.mdpi.com/2412-3811/10/5/114/pdf",
+                  ],
+              },
+          ]
+
+          STOPWORDS = {
+              "a", "an", "and", "are", "as", "at", "based", "by", "for", "from",
+              "in", "of", "on", "the", "to", "toward", "towards", "under", "using",
+              "with", "via", "network", "learning", "control", "traffic", "signal",
+              "reinforcement", "deep", "method", "methods", "system",
+          }
+
+          def normalize(text: str) -> str:
+              return re.sub(r"[^a-z0-9]+", " ", text.lower()).strip()
+
+          def title_tokens(text: str) -> set[str]:
+              return {
+                  token for token in normalize(text).split()
+                  if len(token) >= 4 and token not in STOPWORDS
+              }
+
+          def title_similarity(left: str, right: str) -> float:
+              return SequenceMatcher(None, normalize(left), normalize(right)).ratio()
+
+          def safe_name(ref: int, title: str) -> str:
+              cleaned = re.sub(r"[^A-Za-z0-9]+", "_", title).strip("_")
+              return f"{ref:03d}_{cleaned[:115]}.pdf"
+
+          def looks_like_pdf(data: bytes) -> bool:
+              return len(data) > 10_000 and data.lstrip()[:5] == b"%PDF-"
+
+          def pdf_matches_title(data: bytes, expected_title: str) -> tuple[bool, str]:
+              try:
+                  reader = PdfReader(io.BytesIO(data), strict=False)
+                  text_parts: list[str] = []
+                  metadata = reader.metadata
+                  if metadata and metadata.title:
+                      text_parts.append(str(metadata.title))
+                  for page in reader.pages[:3]:
+                      try:
+                          text_parts.append(page.extract_text() or "")
+                      except Exception:
+                          continue
+                  extracted = " ".join(text_parts)
+                  if not extracted.strip():
+                      return True, "PDF valid; title text unavailable"
+
+                  expected = title_tokens(expected_title)
+                  observed = title_tokens(extracted[:20000])
+                  overlap = len(expected & observed) / max(1, len(expected))
+                  similarity = title_similarity(expected_title, extracted[:700])
+                  ok = overlap >= 0.45 or similarity >= 0.48
+                  return ok, f"title overlap={overlap:.2f}, similarity={similarity:.2f}"
+              except Exception as exc:
+                  return True, f"PDF valid; metadata check unavailable: {type(exc).__name__}"
+
+          def extract_pdf_links(html: str, base_url: str) -> list[str]:
+              soup = BeautifulSoup(html, "html.parser")
+              links: list[str] = []
+
+              for key in (
+                  "citation_pdf_url",
+                  "eprints.document_url",
+                  "wkhealth_pdf_url",
+                  "pdf_url",
+              ):
+                  node = soup.find("meta", attrs={"name": key})
+                  if node and node.get("content"):
+                      links.append(urljoin(base_url, node["content"]))
+
+              for node in soup.find_all("meta"):
+                  prop = (node.get("property") or "").lower()
+                  if prop in {"og:pdf", "pdf_url"} and node.get("content"):
+                      links.append(urljoin(base_url, node["content"]))
+
+              for node in soup.find_all("a", href=True):
+                  href = node["href"]
+                  text = node.get_text(" ", strip=True).lower()
+                  lower = href.lower()
+                  if (
+                      lower.endswith(".pdf")
+                      or "/pdf/" in lower
+                      or "download" in lower
+                      or text in {"pdf", "download pdf", "view pdf", "full text pdf"}
+                  ):
+                      links.append(urljoin(base_url, href))
+
+              return list(dict.fromkeys(links))
+
+          def curl_get(url: str) -> tuple[bytes | None, str]:
+              with tempfile.NamedTemporaryFile(delete=False) as temp:
+                  temp_path = Path(temp.name)
+
+              command = [
+                  "curl",
+                  "--location",
+                  "--fail",
+                  "--show-error",
+                  "--silent",
+                  "--compressed",
+                  "--http1.1",
+                  "--insecure",
+                  "--retry", "5",
+                  "--retry-delay", "2",
+                  "--retry-all-errors",
+                  "--connect-timeout", "25",
+                  "--max-time", "180",
+                  "--user-agent", HEADERS["User-Agent"],
+                  "--header", f'Accept: {HEADERS["Accept"]}',
+                  "--output", str(temp_path),
+                  "--write-out", "%{url_effective}",
+                  url,
+              ]
+
+              result = subprocess.run(command, capture_output=True, text=True)
+              effective_url = result.stdout.strip() or url
+
+              if result.returncode != 0:
+                  temp_path.unlink(missing_ok=True)
+                  return None, effective_url
+
+              data = temp_path.read_bytes()
+              temp_path.unlink(missing_ok=True)
+              return data, effective_url
+
+          def fetch_candidate(
+              url: str,
+              expected_title: str,
+              depth: int = 0,
+          ) -> tuple[bytes | None, str, str]:
+              if depth > 1:
+                  return None, url, "HTML recursion limit"
+
+              data, effective_url = curl_get(url)
+              if data is None:
+                  return None, effective_url, "curl download failed"
+
+              if looks_like_pdf(data):
+                  matches, note = pdf_matches_title(data, expected_title)
+                  if matches:
+                      return data, effective_url, f"PDF verified; {note}"
+                  return None, effective_url, f"PDF title mismatch; {note}"
+
+              sample = data[:1000].lower()
+              if b"<html" in sample or b"<!doctype" in sample:
+                  html = data.decode("utf-8", errors="ignore")
+                  for link in extract_pdf_links(html, effective_url)[:20]:
+                      pdf, final_url, note = fetch_candidate(
+                          link,
+                          expected_title,
+                          depth + 1,
+                      )
+                      if pdf:
+                          return pdf, final_url, note
+                  return None, effective_url, "HTML without matching downloadable PDF"
+
+              return None, effective_url, f"Not PDF ({len(data)} bytes)"
+
+          def discover_doi(title: str) -> str | None:
+              try:
+                  response = session.get(
+                      "https://api.crossref.org/works",
+                      params={
+                          "query.title": title,
+                          "rows": 7,
+                          "select": "DOI,title",
+                      },
+                      headers=HEADERS,
+                      timeout=35,
+                  )
+                  items = response.json().get("message", {}).get("items", [])
+                  best_doi = None
+                  best_score = 0.0
+                  for item in items:
+                      candidate_title = " ".join(item.get("title") or [])
+                      score = title_similarity(title, candidate_title)
+                      if score > best_score and item.get("DOI"):
+                          best_score = score
+                          best_doi = item["DOI"]
+                  if best_score >= 0.68:
+                      return best_doi
+              except Exception:
+                  pass
+              return None
+
+          def crossref_candidates(doi: str) -> list[str]:
+              urls: list[str] = []
+              try:
+                  encoded = quote(doi, safe="")
+                  data = session.get(
+                      f"https://api.crossref.org/works/{encoded}",
+                      headers=HEADERS,
+                      timeout=35,
+                  ).json()
+                  message = data.get("message") or {}
+                  for link in message.get("link") or []:
+                      url = link.get("URL")
+                      if url:
+                          urls.append(url)
+                  resource = (message.get("resource") or {}).get("primary") or {}
+                  if resource.get("URL"):
+                      urls.append(resource["URL"])
+              except Exception:
+                  pass
+              return list(dict.fromkeys(urls))
+
+          def openalex_candidates(title: str, doi: str | None) -> list[str]:
+              urls: list[str] = []
+              try:
+                  if doi:
+                      endpoint = f"https://api.openalex.org/works/https://doi.org/{doi}"
+                      data = session.get(endpoint, headers=HEADERS, timeout=35).json()
+                      works = [data]
+                  else:
+                      data = session.get(
+                          "https://api.openalex.org/works",
+                          params={"search": title, "per-page": 8},
+                          headers=HEADERS,
+                          timeout=35,
+                      ).json()
+                      works = [
+                          work for work in (data.get("results") or [])
+                          if title_similarity(title, work.get("title") or "") >= 0.65
+                      ]
+
+                  for work in works:
+                      locations = [
+                          work.get("best_oa_location"),
+                          work.get("primary_location"),
+                      ]
+                      locations.extend(work.get("locations") or [])
+                      for location in locations:
+                          if not location:
+                              continue
+                          if location.get("pdf_url"):
+                              urls.append(location["pdf_url"])
+                          if location.get("landing_page_url"):
+                              urls.append(location["landing_page_url"])
+              except Exception:
+                  pass
+              return list(dict.fromkeys(urls))
+
+          def unpaywall_candidates(doi: str) -> list[str]:
+              urls: list[str] = []
+              try:
+                  encoded = quote(doi, safe="")
+                  data = session.get(
+                      f"https://api.unpaywall.org/v2/{encoded}?email=paper-downloader@example.com",
+                      headers=HEADERS,
+                      timeout=35,
+                  ).json()
+                  locations = [data.get("best_oa_location")]
+                  locations.extend(data.get("oa_locations") or [])
+                  for location in locations:
+                      if not location:
+                          continue
+                      for key in ("url_for_pdf", "url"):
+                          if location.get(key):
+                              urls.append(location[key])
+              except Exception:
+                  pass
+              return list(dict.fromkeys(urls))
+
+          def semantic_scholar_candidates(title: str, doi: str | None) -> list[str]:
+              urls: list[str] = []
+              try:
+                  if doi:
+                      encoded = quote(doi, safe="")
+                      endpoint = (
+                          "https://api.semanticscholar.org/graph/v1/paper/"
+                          f"DOI:{encoded}?fields=title,openAccessPdf,url,externalIds"
+                      )
+                      results = [
+                          session.get(endpoint, headers=HEADERS, timeout=35).json()
+                      ]
+                  else:
+                      data = session.get(
+                          "https://api.semanticscholar.org/graph/v1/paper/search",
+                          params={
+                              "query": title,
+                              "limit": 7,
+                              "fields": "title,openAccessPdf,url,externalIds",
+                          },
+                          headers=HEADERS,
+                          timeout=35,
+                      ).json()
+                      results = [
+                          item for item in (data.get("data") or [])
+                          if title_similarity(title, item.get("title") or "") >= 0.65
+                      ]
+
+                  for result in results:
+                      oa = result.get("openAccessPdf") or {}
+                      if oa.get("url"):
+                          urls.append(oa["url"])
+                      external = result.get("externalIds") or {}
+                      arxiv_id = external.get("ArXiv")
+                      if arxiv_id:
+                          urls.append(f"https://arxiv.org/pdf/{arxiv_id}.pdf")
+              except Exception:
+                  pass
+              return list(dict.fromkeys(urls))
+
+          rows: list[dict[str, str]] = []
+
+          for paper in PAPERS:
+              ref = int(paper["ref"])
+              title = str(paper["title"])
+              filename = safe_name(ref, title)
+              output = OUT / filename
+
+              candidates: list[str] = list(paper.get("candidates", []))
+
+              arxiv_id = paper.get("arxiv")
+              if arxiv_id:
+                  candidates.extend([
+                      f"https://arxiv.org/pdf/{arxiv_id}.pdf",
+                      f"https://export.arxiv.org/pdf/{arxiv_id}",
+                  ])
+
+              doi = paper.get("doi") or discover_doi(title)
+              doi_text = str(doi) if doi else None
+
+              candidates.extend(openalex_candidates(title, doi_text))
+              candidates.extend(semantic_scholar_candidates(title, doi_text))
+
+              if doi_text:
+                  candidates.extend(crossref_candidates(doi_text))
+                  candidates.extend(unpaywall_candidates(doi_text))
+                  candidates.append(f"https://doi.org/{doi_text}")
+
+              candidates = list(dict.fromkeys(candidates))
+              downloaded = False
+              attempts: list[str] = []
+
+              print(f"\n[{ref}] {title}")
+              if doi_text:
+                  print(f"  DOI: {doi_text}")
+
+              for candidate in candidates:
+                  print(f"  Trying {candidate}")
+                  pdf, final_url, note = fetch_candidate(candidate, title)
+                  attempts.append(f"{candidate} -> {note}")
+
+                  if pdf:
+                      output.write_bytes(pdf)
+                      rows.append({
+                          "reference": str(ref),
+                          "title": title,
+                          "status": "downloaded",
+                          "filename": filename,
+                          "source_url": final_url,
+                          "bytes": str(len(pdf)),
+                          "notes": f"{note}; DOI={doi_text or 'not found'}",
+                      })
+                      downloaded = True
+                      print(
+                          f"  Downloaded {len(pdf):,} bytes "
+                          f"from {final_url}"
+                      )
+                      break
+
+                  time.sleep(0.35)
+
+              if not downloaded:
+                  rows.append({
+                      "reference": str(ref),
+                      "title": title,
+                      "status": "not downloaded",
+                      "filename": "",
+                      "source_url": "",
+                      "bytes": "0",
+                      "notes": (
+                          (f"DOI={doi_text} | " if doi_text else "")
+                          + " | ".join(attempts)[-3500:]
+                      ),
+                  })
+                  print("  No lawful public PDF retrieved.")
+
+          status_file = Path("download_status_80_102.csv")
+          with status_file.open("w", newline="", encoding="utf-8") as handle:
+              writer = csv.DictWriter(
+                  handle,
+                  fieldnames=[
+                      "reference",
+                      "title",
+                      "status",
+                      "filename",
+                      "source_url",
+                      "bytes",
+                      "notes",
+                  ],
+              )
+              writer.writeheader()
+              writer.writerows(rows)
+
+          downloaded_rows = [
+              row for row in rows if row["status"] == "downloaded"
+          ]
+          failed_rows = [
+              row for row in rows if row["status"] != "downloaded"
+          ]
+
+          readme = [
+              "# Traffic Papers - References 80-102",
+              "",
+              (
+                  f"Downloaded and PDF-verified: "
+                  f"**{len(downloaded_rows)} of {len(rows)}** references."
+              ),
+              "",
+              "## Downloaded files",
+              "",
+          ]
+
+          for row in downloaded_rows:
+              readme.append(
+                  f"- **{int(row['reference']):03d}** - "
+                  f"[{row['title']}](papers_80_102/{row['filename']})"
+              )
+
+          if failed_rows:
+              readme.extend(["", "## Not retrieved automatically", ""])
+              for row in failed_rows:
+                  readme.append(
+                      f"- **{int(row['reference']):03d}** - {row['title']}"
+                  )
+
+          readme.extend([
+              "",
+              (
+                  "Only openly accessible publisher copies, institutional "
+                  "manuscripts, and lawful public preprints were attempted."
+              ),
+          ])
+
+          readme_path = Path("README_80_102.md")
+          readme_path.write_text(
+              "\n".join(readme) + "\n",
+              encoding="utf-8",
+          )
+
+          zip_path = Path("Traffic_Papers_References_80-102.zip")
+          with zipfile.ZipFile(
+              zip_path,
+              "w",
+              compression=zipfile.ZIP_DEFLATED,
+          ) as archive:
+              for pdf in sorted(OUT.glob("*.pdf")):
+                  archive.write(pdf, pdf.name)
+              archive.write(status_file)
+              archive.write(readme_path)
+
+          print(
+              f"\nCreated {zip_path} with "
+              f"{len(downloaded_rows)} verified PDFs."
+          )
+          PY
+
+          python /tmp/download_papers_80_102.py
+
+      - name: Commit downloaded papers and ZIP
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add papers_80_102 README_80_102.md download_status_80_102.csv Traffic_Papers_References_80-102.zip
+          if git diff --cached --quiet; then
+            echo 'No new files to commit.'
+          else
+            git commit -m 'Add open-access papers 80-102 by reference number'
+            git pull --rebase origin "$GITHUB_REF_NAME"
+            git push origin "HEAD:$GITHUB_REF_NAME"
+          fi
+
+      - name: Upload downloadable ZIP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Traffic-Papers-References-80-102
+          path: |
+            Traffic_Papers_References_80-102.zip
+            download_status_80_102.csv
+          if-no-files-found: error
+          retention-days: 7
