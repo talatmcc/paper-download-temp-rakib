@@ -1,0 +1,183 @@
+reference,title,status,filename,source_url,bytes,notes
+1,"Investigating the Role of Green Transport, Environmental Taxes and Expenditures in Mitigating the Transport CO2 Emissions",publisher paywalled or no verified public copy,,,0,"DOI=10.1080/19427867.2022.2065592 | https://www.tandfonline.com/doi/pdf/10.1080/19427867.2022.2065592?download=1 -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403 | https://www.tandfonline.com/doi/epdf/10.1080/19427867.2022.2065592?needAccess=true -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403 | https://doi.org/10.1080/19427867.2022.2065592 -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403 | https://www.tandfonline.com/doi/pdf/10.1080/19427867.2022.2065592 -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403 | https://www.tandfonline.com/doi/full/10.1080/19427867.2022.2065592 -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403"
+4,Air Pollution and Health Risks Due to Vehicle Traffic,not downloaded,,,0,"DOI=10.1016/j.scitotenv.2013.01.074 | https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4243514/pdf/nihms641926.pdf -> HTML without matching downloadable PDF | https://pmc.ncbi.nlm.nih.gov/articles/PMC4243514/pdf/nihms641926.pdf -> HTML without matching downloadable PDF | https://doi.org/10.1016/j.scitotenv.2013.01.074 -> HTML without matching downloadable PDF | https://pubmed.ncbi.nlm.nih.gov/23500830 -> HTML without matching downloadable PDF | https://www.ncbi.nlm.nih.gov/pmc/articles/4243514 -> HTML without matching downloadable PDF | https://europepmc.org/articles/pmc4243514?pdf=render -> curl: (22) The requested URL returned error: 500
+curl: (22) The requested URL returned error: 500
+curl: (22) The requested URL returned error: 500
+curl: (22) The requested URL returned error: 500
+curl: (22) The requested URL returned error: 500
+curl: (22) The requested URL returned error: 500
+curl: (22) The requested URL returned error: 500
+curl: (22) The requested URL returned error: 500 | https://api.elsevier.com/content/article/PII:S0048969713001290?httpAccept=text/xml -> Not PDF (1820 bytes) | https://api.elsevier.com/content/article/PII:S0048969713001290?httpAccept=text/plain -> curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400 | https://linkinghub.elsevier.com/retrieve/pii/S0048969713001290 -> HTML without matching downloadable PDF"
+6,The Effect of Modern Traffic Information on Braess' Paradox,downloaded,06_The_Effect_of_Modern_Traffic_Information_on_Braess_Paradox.pdf,https://arxiv.org/pdf/2011.09456,522795,"PDF verified; title overlap=1.00, similarity=0.12; DOI=10.1016/j.physa.2021.125829"
+8,Traffic Management Optimization via IoT-Enhanced Cooperative Vehicle-Infrastructure Systems,publisher paywalled or no verified public copy,,,0,DOI=10.1109/JIOT.2024.3419440 | https://doi.org/10.1109/jiot.2024.3419440 -> HTML without matching downloadable PDF | http://xplorestaging.ieee.org/ielx8/6488907/10874850/10572025.pdf?arnumber=10572025 -> HTML without matching downloadable PDF | https://ieeexplore.ieee.org/document/10572025/ -> HTML without matching downloadable PDF | https://doi.org/10.1109/JIOT.2024.3419440 -> HTML without matching downloadable PDF
+9,"Stop-and-Go Traffic Analysis: Theoretical Properties, Environmental Impacts and Oscillation Mitigation",publisher paywalled or no verified public copy,,,0,"DOI=10.1016/j.trb.2014.09.014 | https://doi.org/10.1016/j.trb.2014.09.014 -> HTML without matching downloadable PDF | http://www.sciencedirect.com/science/article/pii/S0191261514001684 -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403 | https://api.elsevier.com/content/article/PII:S0191261514001684?httpAccept=text/xml -> Not PDF (1871 bytes) | https://api.elsevier.com/content/article/PII:S0191261514001684?httpAccept=text/plain -> curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400 | https://linkinghub.elsevier.com/retrieve/pii/S0191261514001684 -> HTML without matching downloadable PDF"
+15,The Sydney Coordinated Adaptive Traffic System Philosophy and Benefits,publisher paywalled or no verified public copy,,,0,DOI=10.1109/T-VT.1980.23833 | https://doi.org/10.1109/t-vt.1980.23833 -> HTML without matching downloadable PDF | http://xplorestaging.ieee.org/ielx5/25/34047/01622746.pdf?arnumber=1622746 -> HTML without matching downloadable PDF | http://ieeexplore.ieee.org/document/1622746/ -> HTML without matching downloadable PDF | https://doi.org/10.1109/T-VT.1980.23833 -> HTML without matching downloadable PDF
+16,Lane-Based Saturation Degree Estimation for Signalized Intersections Using Travel Time Data,publisher paywalled or no verified public copy,,,0,DOI=10.1109/MITS.2017.2709881 | https://doi.org/10.1109/mits.2017.2709881 -> HTML without matching downloadable PDF | http://xplorestaging.ieee.org/ielx7/5117645/7990605/07990636.pdf?arnumber=7990636 -> HTML without matching downloadable PDF | http://ieeexplore.ieee.org/document/7990636/ -> HTML without matching downloadable PDF | https://doi.org/10.1109/MITS.2017.2709881 -> HTML without matching downloadable PDF
+17,A Multivariable Regulator Approach to Traffic-Responsive Network-Wide Signal Control,not downloaded,,,0,"DOI=10.1016/S0967-0661(01)00121-6 | https://citeseerx.ist.psu.edu/document?doi=294f2a0643a943853213634e7a9cb9e4c88595e8&repid=rep1&type=pdf -> HTML without matching downloadable PDF | http://citeseerx.ist.psu.edu/document?doi=294f2a0643a943853213634e7a9cb9e4c88595e8&repid=rep1&type=pdf -> HTML without matching downloadable PDF | http://infoscience.epfl.ch/record/177189 -> HTML without matching downloadable PDF | https://doi.org/10.1016/s0967-0661(01)00121-6 -> HTML without matching downloadable PDF | http://eprints.gla.ac.uk/81372/ -> HTML without matching downloadable PDF | https://infoscience.epfl.ch/handle/20.500.14299/80487 -> HTML without matching downloadable PDF | https://api.elsevier.com/content/article/PII:S0967066101001216?httpAccept=text/xml -> Not PDF (1843 bytes) | https://api.elsevier.com/content/article/PII:S0967066101001216?httpAccept=text/plain -> curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400 | https://linkinghub.elsevier.com/retrieve/pii/S0967066101001216 -> HTML without matching downloadable PDF | https://doi.org/10.1016/S0967-0661(01)00121-6 -> HTML without matching downloadable PDF"
+18,Optimizing Networks of Traffic Signals in Real Time: The SCOOT Method,publisher paywalled or no verified public copy,,,0,DOI=10.1109/25.69966 | https://doi.org/10.1109/25.69966 -> HTML without matching downloadable PDF | http://xplorestaging.ieee.org/ielx1/25/2453/00069966.pdf?arnumber=69966 -> HTML without matching downloadable PDF | http://ieeexplore.ieee.org/document/69966/ -> HTML without matching downloadable PDF
+20,A Comparison of Deep Reinforcement Learning Models for Isolated Traffic Signal Control,publisher paywalled or no verified public copy,,,0,DOI=10.1109/MITS.2022.3144797 | https://doi.org/10.1109/mits.2022.3144797 -> HTML without matching downloadable PDF | http://xplorestaging.ieee.org/ielx7/5117645/10015073/09712430.pdf?arnumber=9712430 -> HTML without matching downloadable PDF | https://ieeexplore.ieee.org/document/9712430/ -> HTML without matching downloadable PDF | https://doi.org/10.1109/MITS.2022.3144797 -> HTML without matching downloadable PDF
+21,A Survey of Intelligence Methods in Urban Traffic Signal Control,downloaded,21_A_Survey_of_Intelligence_Methods_in_Urban_Traffic_Signal_Control.pdf,http://paper.ijcsns.org/07_book/200707/20070714.pdf,235101,"PDF verified; title overlap=1.00, similarity=0.11; DOI=not available"
+22,A Large-Scale Traffic Signal Control Algorithm Based on Multi-Layer Graph Deep Reinforcement Learning,publisher paywalled or no verified public copy,,,0,"DOI=10.1016/j.trc.2024.104582 | https://doi.org/10.1016/j.trc.2024.104582 -> HTML without matching downloadable PDF | https://api.elsevier.com/content/article/PII:S0968090X24001037?httpAccept=text/xml -> Not PDF (1872 bytes) | https://api.elsevier.com/content/article/PII:S0968090X24001037?httpAccept=text/plain -> curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400 | https://linkinghub.elsevier.com/retrieve/pii/S0968090X24001037 -> HTML without matching downloadable PDF"
+24,Adaptive Traffic Signal Control with Deep Reinforcement Learning and High Dimensional Sensory Inputs: Case Study and Comprehensive Sensitivity Analyses,publisher paywalled or no verified public copy,,,0,DOI=10.1109/TITS.2022.3179893 | https://doi.org/10.1109/tits.2022.3179893 -> HTML without matching downloadable PDF | http://xplorestaging.ieee.org/ielx7/6979/9942712/09796123.pdf?arnumber=9796123 -> HTML without matching downloadable PDF | https://ieeexplore.ieee.org/document/9796123/ -> HTML without matching downloadable PDF | https://doi.org/10.1109/TITS.2022.3179893 -> HTML without matching downloadable PDF
+25,Cooperative Traffic Signal Control Using a Distributed Agent-Based Deep Reinforcement Learning With Incentive Communication,publisher paywalled or no verified public copy,,,0,DOI=10.1109/TITS.2024.3352730 | https://doi.org/10.1109/tits.2024.3352730 -> HTML without matching downloadable PDF | http://xplorestaging.ieee.org/ielx7/6979/10621861/10440155.pdf?arnumber=10440155 -> HTML without matching downloadable PDF | https://ieeexplore.ieee.org/document/10440155/ -> HTML without matching downloadable PDF | https://doi.org/10.1109/TITS.2024.3352730 -> HTML without matching downloadable PDF
+26,Multi-Agent Deep Reinforcement Learning Collaborative Traffic Signal Control Method Considering Intersection Heterogeneity,publisher paywalled or no verified public copy,,,0,"DOI=10.1016/j.trc.2024.104663 | https://doi.org/10.1016/j.trc.2024.104663 -> HTML without matching downloadable PDF | https://api.elsevier.com/content/article/PII:S0968090X24001840?httpAccept=text/xml -> Not PDF (1894 bytes) | https://api.elsevier.com/content/article/PII:S0968090X24001840?httpAccept=text/plain -> curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400
+curl: (22) The requested URL returned error: 400 | https://linkinghub.elsevier.com/retrieve/pii/S0968090X24001840 -> HTML without matching downloadable PDF"
+27,Decentralized and Communication-Based Multi-Agent Traffic Signal Control Model Employing a Graph Representation for the State,publisher paywalled or no verified public copy,,,0,DOI=10.1109/TITS.2025.3548945 | https://doi.org/10.1109/tits.2025.3548945 -> HTML without matching downloadable PDF | http://xplorestaging.ieee.org/ielx8/6979/10988578/10932663.pdf?arnumber=10932663 -> HTML without matching downloadable PDF | https://ieeexplore.ieee.org/document/10932663/ -> HTML without matching downloadable PDF | https://doi.org/10.1109/TITS.2025.3548945 -> HTML without matching downloadable PDF
+29,Multiagent Reinforcement Learning With Heterogeneous Graph Attention Network,publisher paywalled or no verified public copy,,,0,DOI=10.1109/TNNLS.2022.3215774 | https://doi.org/10.1109/tnnls.2022.3215774 -> HTML without matching downloadable PDF | https://pubmed.ncbi.nlm.nih.gov/36331648 -> HTML without matching downloadable PDF | http://xplorestaging.ieee.org/ielx7/5962385/10273172/09940201.pdf?arnumber=9940201 -> HTML without matching downloadable PDF | https://ieeexplore.ieee.org/document/9940201/ -> HTML without matching downloadable PDF | https://doi.org/10.1109/TNNLS.2022.3215774 -> HTML without matching downloadable PDF
+35,"Continuous Delivery: Reliable Software Releases Through Build, Test, and Deployment Automation",paid copyrighted item,,https://www.informit.com/store/continuous-delivery-reliable-software-releases-through-9780321770424,0,Paid copyrighted commercial book. The workflow records the official purchase page but does not download an unauthorized copy.
+36,Research for Practice: The DevOps Phenomenon,not downloaded,,,0,"DOI=10.1145/3331138 | https://dl.acm.org/doi/pdf/10.1145/3331138 -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403 | https://cacm.acm.org/magazines/2019/8/238341-research-for-practice-the-devops-phenomenon/fulltext -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403 | https://publications.hnu.de/1492/ -> HTML without matching downloadable PDF | https://digitalcollection.zhaw.ch/handle/11475/25485 -> HTML without matching downloadable PDF | https://doi.org/10.1145/3331138 -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403 | https://mediatum.ub.tum.de/1516409 -> HTML without matching downloadable PDF | https://dl.acm.org/doi/10.1145/3331138 -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403"
+39,CityLight: A Neighborhood-Inclusive Universal Model for Coordinated City-Scale Traffic Signal Control,downloaded,39_CityLight_A_Neighborhood_Inclusive_Universal_Model_for_Coordinated_City_Scale_Traffic_Signal_Control.pdf,https://arxiv.org/pdf/2406.02126,1083222,"PDF verified; title overlap=1.00, similarity=0.20; DOI=10.1145/3746252.3761285"
+43,First Steps Towards Real-World Traffic Signal Control Optimisation by Reinforcement Learning,not downloaded,,,0,"DOI=10.1080/17477778.2024.2364715 | https://www.tandfonline.com/doi/pdf/10.1080/17477778.2024.2364715?download=1 -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403 | https://www.tandfonline.com/doi/epdf/10.1080/17477778.2024.2364715?needAccess=true -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403 | https://www.tandfonline.com/doi/pdf/10.1080/17477778.2024.2364715?needAccess=true -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403 | https://doi.org/10.1080/17477778.2024.2364715 -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403 | http://hdl.handle.net/10.1080/17477778.2024.2364715 -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403 | https://publica.fraunhofer.de/handle/publica/471235 -> HTML without matching downloadable PDF | https://www.tandfonline.com/doi/pdf/10.1080/17477778.2024.2364715 -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403 | https://www.tandfonline.com/doi/full/10.1080/17477778.2024.2364715 -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403"
