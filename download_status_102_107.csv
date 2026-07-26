@@ -1,0 +1,49 @@
+reference,title,status,filename,source_url,bytes,notes
+102,Traffic Signal Control via Reinforcement Learning: A Review on Applications and Innovations,not downloaded,,,0,"DOI=10.3390/infrastructures10050114 | https://www.mdpi.com/2412-3811/10/5/114/pdf -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403 | https://mdpi-res.com/d_attachment/infrastructures/infrastructures-10-00114/article_deploy/infrastructures-10-00114-v2.pdf -> curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404
+curl: (22) The requested URL returned error: 404 | https://www.mdpi.com/2412-3811/10/5/114 -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403 | https://www.mdpi.com/2412-3811/10/5/114/pdf?version=1746531161 -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403 | https://doi.org/10.3390/infrastructures10050114 -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403 | https://doaj.org/article/04cf2127e1ef4bdbb2dd3899d5e07215 -> curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403
+curl: (22) The requested URL returned error: 403"
+103,Self-Attention Graph Pooling,downloaded,103_Self_Attention_Graph_Pooling.pdf,https://proceedings.mlr.press/v97/lee19c/lee19c.pdf,471691,"PDF verified; title overlap=1.00, similarity=0.06; DOI=10.48550/arXiv.1904.08082"
+104,Multi-Task Deep Reinforcement Learning with PopArt,downloaded,104_Multi_Task_Deep_Reinforcement_Learning_with_PopArt.pdf,https://cdn.aaai.org/ojs/4266/4266-13-7320-1-10-20190705.pdf,808073,"PDF verified; title overlap=1.00, similarity=0.11; DOI=10.1609/aaai.v33i01.33013796"
+105,Learning Values Across Many Orders of Magnitude,downloaded,105_Learning_Values_Across_Many_Orders_of_Magnitude.pdf,https://proceedings.neurips.cc/paper_files/paper/2016/file/5227b6aaf294f5f027273aebf16015f2-Paper.pdf,905195,"PDF verified; title overlap=1.00, similarity=0.10; DOI=not applicable"
+106,Using a Single Actor to Output Personalized Policy for Different Intersections,downloaded,106_Using_a_Single_Actor_to_Output_Personalized_Policy_for_Different_Intersections.pdf,https://arxiv.org/pdf/2503.07678,6446589,"PDF verified; title overlap=1.00, similarity=0.16; DOI=10.1016/j.neunet.2026.108909"
+107,The Max-Pressure Controller for Arbitrary Networks of Signalized Intersections,downloaded,107_The_Max_Pressure_Controller_for_Arbitrary_Networks_of_Signalized_Intersections.pdf,https://connected-corridors.berkeley.edu/sites/default/files/Variants%20of%20Max%20Pressure%20Control%20for%20Signalized%20Intersections.pdf,449355,"PDF verified; title overlap=1.00, similarity=0.12; DOI=10.1007/978-1-4614-6243-9_2"
