@@ -1,0 +1,431 @@
+name: Download open-access papers 36-55
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/download-papers.yml'
+
+permissions:
+  contents: write
+
+env:
+  PYTHONUNBUFFERED: '1'
+
+jobs:
+  download:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install downloader dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install requests beautifulsoup4
+
+      - name: Download and verify public PDFs
+        shell: bash
+        run: |
+          cat > /tmp/download_papers.py <<'PY'
+          from __future__ import annotations
+
+          import csv
+          import re
+          import time
+          import zipfile
+          from pathlib import Path
+          from urllib.parse import quote, urljoin
+
+          import requests
+          from bs4 import BeautifulSoup
+          from requests.adapters import HTTPAdapter
+          from urllib3.util.retry import Retry
+
+          OUT = Path('papers')
+          OUT.mkdir(exist_ok=True)
+
+          HEADERS = {
+              'User-Agent': (
+                  'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 '
+                  '(KHTML, like Gecko) Chrome/126.0 Safari/537.36 '
+                  'OpenAccessPaperCollector/1.0'
+              ),
+              'Accept': 'application/pdf,text/html,application/xhtml+xml;q=0.9,*/*;q=0.8',
+          }
+
+          session = requests.Session()
+          retry = Retry(
+              total=4,
+              connect=4,
+              read=4,
+              backoff_factor=1.2,
+              status_forcelist=(429, 500, 502, 503, 504),
+              allowed_methods=frozenset({'GET', 'HEAD'}),
+          )
+          session.mount('https://', HTTPAdapter(max_retries=retry))
+          session.mount('http://', HTTPAdapter(max_retries=retry))
+
+          PAPERS = [
+              {
+                  'ref': 36,
+                  'title': 'Research for Practice: The DevOps Phenomenon',
+                  'doi': '10.1145/3331138',
+                  'candidates': [
+                      'https://cacm.acm.org/wp-content/uploads/2019/07/p44-wiedemann.pdf',
+                      'https://cacm.acm.org/magazines/2019/8/238341-research-for-practice-the-devops-phenomenon/fulltext',
+                      'https://publications.hnu.de/1492/',
+                  ],
+              },
+              {
+                  'ref': 37,
+                  'title': 'IG-RL: Inductive Graph Reinforcement Learning for Massive-Scale Traffic Signal Control',
+                  'doi': '10.1109/TITS.2021.3070835',
+                  'arxiv': '2003.05738',
+              },
+              {
+                  'ref': 38,
+                  'title': 'OAM: An Option-Action Reinforcement Learning Framework for Universal Multi-Intersection Control',
+                  'doi': '10.1609/aaai.v36i4.20378',
+                  'candidates': [
+                      'https://ojs.aaai.org/index.php/AAAI/article/download/20378/20137',
+                      'https://ojs.aaai.org/index.php/AAAI/article/view/20378/20137',
+                  ],
+              },
+              {
+                  'ref': 39,
+                  'title': 'CityLight: A Neighborhood-Inclusive Universal Model for Coordinated City-Scale Traffic Signal Control',
+                  'doi': '10.1145/3746252.3761285',
+                  'candidates': [
+                      'https://dl.acm.org/doi/pdf/10.1145/3746252.3761285',
+                  ],
+              },
+              {
+                  'ref': 40,
+                  'title': 'Unicorn: A Universal and Collaborative Reinforcement Learning Approach Toward Generalizable Network-Wide Traffic Signal Control',
+                  'doi': '10.1109/TITS.2026.3653478',
+                  'arxiv': '2503.11488',
+              },
+              {
+                  'ref': 41,
+                  'title': 'The Real Deal: A Review of Challenges and Opportunities in Moving Reinforcement Learning-Based Traffic Signal Control Systems Towards Reality',
+                  'arxiv': '2206.11996',
+              },
+              {
+                  'ref': 42,
+                  'title': 'Towards Real-World Deployment of Reinforcement Learning for Traffic Signal Control',
+                  'doi': '10.1109/ICMLA52953.2021.00085',
+                  'arxiv': '2103.16223',
+              },
+              {
+                  'ref': 43,
+                  'title': 'First Steps Towards Real-World Traffic Signal Control Optimisation by Reinforcement Learning',
+                  'doi': '10.1080/17477778.2024.2364715',
+                  'candidates': [
+                      'https://www.tandfonline.com/doi/pdf/10.1080/17477778.2024.2364715?download=1',
+                      'https://www.tandfonline.com/doi/epdf/10.1080/17477778.2024.2364715?needAccess=true',
+                  ],
+              },
+              {
+                  'ref': 44,
+                  'title': 'Reinforcement Learning Approaches for Traffic Signal Control under Missing Data',
+                  'doi': '10.24963/ijcai.2023/251',
+                  'arxiv': '2304.10722',
+                  'candidates': ['https://www.ijcai.org/proceedings/2023/0251.pdf'],
+              },
+              {
+                  'ref': 45,
+                  'title': 'Position, Padding and Predictions: A Deeper Look at Position Information in CNNs',
+                  'doi': '10.1007/s11263-024-02069-9',
+                  'arxiv': '2101.12322',
+              },
+              {
+                  'ref': 46,
+                  'title': 'On Translation Invariance in CNNs: Convolutional Layers Can Exploit Absolute Spatial Location',
+                  'doi': '10.1109/CVPR42600.2020.01428',
+                  'arxiv': '2003.07064',
+                  'candidates': [
+                      'https://openaccess.thecvf.com/content_CVPR_2020/papers/Kayhan_On_Translation_Invariance_in_CNNs_Convolutional_Layers_Can_Exploit_Absolute_CVPR_2020_paper.pdf'
+                  ],
+              },
+              {
+                  'ref': 47,
+                  'title': 'Exchangeable Input Representations for Reinforcement Learning',
+                  'doi': '10.23919/ACC45564.2020.9147901',
+                  'arxiv': '2003.09022',
+              },
+              {
+                  'ref': 48,
+                  'title': 'The Surprising Effectiveness of PPO in Cooperative Multi-Agent Games',
+                  'arxiv': '2103.01955',
+                  'candidates': [
+                      'https://papers.neurips.cc/paper_files/paper/2022/file/9c1535a02f0ce079433344e14d910597-Paper-Datasets_and_Benchmarks.pdf'
+                  ],
+              },
+              {
+                  'ref': 49,
+                  'title': 'Revisiting Parameter Sharing in Multi-Agent Deep Reinforcement Learning',
+                  'arxiv': '2005.13625',
+              },
+              {
+                  'ref': 50,
+                  'title': 'Multi-Agent Reinforcement Learning for Traffic Signal Control through Universal Communication Method',
+                  'doi': '10.24963/ijcai.2022/535',
+                  'arxiv': '2204.12190',
+                  'candidates': ['https://www.ijcai.org/proceedings/2022/0535.pdf'],
+              },
+              {
+                  'ref': 51,
+                  'title': 'CoSLight: Co-optimizing Collaborator Selection and Decision-making to Enhance Traffic Signal Control',
+                  'doi': '10.1145/3637528.3671998',
+                  'arxiv': '2405.17152',
+              },
+              {
+                  'ref': 52,
+                  'title': 'A New Framework for Multi-Agent Reinforcement Learning: Centralized Training and Exploration with Decentralized Execution via Policy Distillation',
+                  'arxiv': '1910.09152',
+              },
+              {
+                  'ref': 53,
+                  'title': 'Double Distillation Network for Multi-Agent Reinforcement Learning',
+                  'doi': '10.1016/j.neucom.2026.133438',
+                  'arxiv': '2502.03125',
+              },
+              {
+                  'ref': 54,
+                  'title': 'LATS: Large Language Model Assisted Teacher-Student Framework for Multi-Agent Reinforcement Learning in Traffic Signal Control',
+                  'arxiv': '2603.24361',
+              },
+              {
+                  'ref': 55,
+                  'title': 'Empirical Evaluation of Gated Recurrent Neural Networks on Sequence Modeling',
+                  'arxiv': '1412.3555',
+              },
+          ]
+
+          def safe_name(ref: int, title: str) -> str:
+              cleaned = re.sub(r'[^A-Za-z0-9]+', '_', title).strip('_')
+              return f'{ref:02d}_{cleaned[:105]}.pdf'
+
+          def looks_like_pdf(data: bytes) -> bool:
+              return len(data) > 10_000 and data.lstrip()[:5] == b'%PDF-'
+
+          def extract_pdf_links(html: str, base_url: str) -> list[str]:
+              soup = BeautifulSoup(html, 'html.parser')
+              links: list[str] = []
+              for key in ('citation_pdf_url', 'eprints.document_url', 'wkhealth_pdf_url'):
+                  node = soup.find('meta', attrs={'name': key})
+                  if node and node.get('content'):
+                      links.append(urljoin(base_url, node['content']))
+              for node in soup.find_all('meta'):
+                  prop = (node.get('property') or '').lower()
+                  if prop in {'og:pdf', 'pdf_url'} and node.get('content'):
+                      links.append(urljoin(base_url, node['content']))
+              for node in soup.find_all('a', href=True):
+                  href = node['href']
+                  text = node.get_text(' ', strip=True).lower()
+                  lower = href.lower()
+                  if lower.endswith('.pdf') or '/pdf/' in lower or 'download' in lower or text == 'pdf':
+                      links.append(urljoin(base_url, href))
+              return list(dict.fromkeys(links))
+
+          def fetch_candidate(url: str, depth: int = 0) -> tuple[bytes | None, str, str]:
+              if depth > 1:
+                  return None, url, 'HTML recursion limit'
+              try:
+                  response = session.get(url, headers=HEADERS, timeout=60, allow_redirects=True)
+                  content = response.content
+                  content_type = response.headers.get('content-type', '').lower()
+                  if response.status_code >= 400:
+                      return None, response.url, f'HTTP {response.status_code}'
+                  if looks_like_pdf(content):
+                      return content, response.url, 'PDF'
+                  if 'html' in content_type or content.lstrip().startswith(b'<!DOCTYPE') or b'<html' in content[:500].lower():
+                      for link in extract_pdf_links(content.decode('utf-8', errors='ignore'), response.url)[:12]:
+                          pdf, final_url, note = fetch_candidate(link, depth + 1)
+                          if pdf:
+                              return pdf, final_url, note
+                      return None, response.url, 'HTML without downloadable PDF'
+                  return None, response.url, f'Not PDF ({content_type or "unknown type"})'
+              except Exception as exc:
+                  return None, url, f'{type(exc).__name__}: {exc}'
+
+          def oa_api_candidates(doi: str) -> list[str]:
+              urls: list[str] = []
+              encoded = quote(doi, safe='')
+
+              # Unpaywall
+              try:
+                  u = f'https://api.unpaywall.org/v2/{encoded}?email=openaccess@example.com'
+                  data = session.get(u, headers=HEADERS, timeout=30).json()
+                  best = data.get('best_oa_location') or {}
+                  for key in ('url_for_pdf', 'url'):
+                      if best.get(key):
+                          urls.append(best[key])
+                  for loc in data.get('oa_locations') or []:
+                      for key in ('url_for_pdf', 'url'):
+                          if loc.get(key):
+                              urls.append(loc[key])
+              except Exception:
+                  pass
+
+              # OpenAlex
+              try:
+                  u = f'https://api.openalex.org/works/https://doi.org/{doi}'
+                  data = session.get(u, headers=HEADERS, timeout=30).json()
+                  locations = [data.get('best_oa_location'), data.get('primary_location')]
+                  locations.extend(data.get('locations') or [])
+                  for loc in locations:
+                      if not loc:
+                          continue
+                      if loc.get('pdf_url'):
+                          urls.append(loc['pdf_url'])
+                      landing = loc.get('landing_page_url')
+                      if landing:
+                          urls.append(landing)
+              except Exception:
+                  pass
+
+              # Semantic Scholar
+              try:
+                  u = (
+                      'https://api.semanticscholar.org/graph/v1/paper/'
+                      f'DOI:{encoded}?fields=title,openAccessPdf,url'
+                  )
+                  data = session.get(u, headers=HEADERS, timeout=30).json()
+                  oa = data.get('openAccessPdf') or {}
+                  if oa.get('url'):
+                      urls.append(oa['url'])
+              except Exception:
+                  pass
+
+              urls.append(f'https://doi.org/{doi}')
+              return list(dict.fromkeys(urls))
+
+          rows: list[dict[str, str]] = []
+
+          for paper in PAPERS:
+              ref = int(paper['ref'])
+              title = str(paper['title'])
+              filename = safe_name(ref, title)
+              output = OUT / filename
+              candidates: list[str] = list(paper.get('candidates', []))
+
+              arxiv_id = paper.get('arxiv')
+              if arxiv_id:
+                  candidates.extend([
+                      f'https://arxiv.org/pdf/{arxiv_id}.pdf',
+                      f'https://export.arxiv.org/pdf/{arxiv_id}',
+                  ])
+
+              doi = paper.get('doi')
+              if doi:
+                  candidates.extend(oa_api_candidates(str(doi)))
+
+              candidates = list(dict.fromkeys(candidates))
+              downloaded = False
+              attempts: list[str] = []
+
+              print(f'\n[{ref}] {title}')
+              for candidate in candidates:
+                  print(f'  Trying {candidate}')
+                  pdf, final_url, note = fetch_candidate(candidate)
+                  attempts.append(f'{candidate} -> {note}')
+                  if pdf:
+                      output.write_bytes(pdf)
+                      rows.append({
+                          'reference': str(ref),
+                          'title': title,
+                          'status': 'downloaded',
+                          'filename': filename,
+                          'source_url': final_url,
+                          'bytes': str(len(pdf)),
+                          'notes': 'Verified PDF header',
+                      })
+                      downloaded = True
+                      print(f'  Downloaded {len(pdf):,} bytes from {final_url}')
+                      break
+                  time.sleep(0.4)
+
+              if not downloaded:
+                  rows.append({
+                      'reference': str(ref),
+                      'title': title,
+                      'status': 'not downloaded',
+                      'filename': '',
+                      'source_url': '',
+                      'bytes': '0',
+                      'notes': ' | '.join(attempts)[-2500:],
+                  })
+                  print('  No lawful public PDF retrieved.')
+
+          with open('download_status_36_55.csv', 'w', newline='', encoding='utf-8') as handle:
+              writer = csv.DictWriter(
+                  handle,
+                  fieldnames=['reference', 'title', 'status', 'filename', 'source_url', 'bytes', 'notes'],
+              )
+              writer.writeheader()
+              writer.writerows(rows)
+
+          downloaded_rows = [row for row in rows if row['status'] == 'downloaded']
+          failed_rows = [row for row in rows if row['status'] != 'downloaded']
+
+          readme = [
+              '# Traffic Papers - References 36-55',
+              '',
+              f'Downloaded and PDF-verified: **{len(downloaded_rows)} of {len(rows)}** references.',
+              '',
+              '## Downloaded files',
+              '',
+          ]
+          for row in downloaded_rows:
+              readme.append(f"- **{int(row['reference']):02d}** - [{row['title']}](papers/{row['filename']})")
+          if failed_rows:
+              readme.extend(['', '## Not retrieved automatically', ''])
+              for row in failed_rows:
+                  readme.append(f"- **{int(row['reference']):02d}** - {row['title']}")
+          readme.extend([
+              '',
+              'Reference 35 is a copyrighted commercial book and was intentionally not downloaded.',
+              '',
+              'Only openly available publisher copies, author manuscripts, and public preprints were attempted.',
+          ])
+          Path('README.md').write_text('\n'.join(readme) + '\n', encoding='utf-8')
+
+          zip_path = Path('Traffic_Papers_References_36-55.zip')
+          with zipfile.ZipFile(zip_path, 'w', compression=zipfile.ZIP_DEFLATED) as archive:
+              for pdf in sorted(OUT.glob('*.pdf')):
+                  archive.write(pdf, pdf.name)
+              archive.write('download_status_36_55.csv')
+              archive.write('README.md')
+
+          print(f'\nCreated {zip_path} with {len(downloaded_rows)} PDFs.')
+          PY
+
+          python /tmp/download_papers.py
+
+      - name: Commit downloaded papers and ZIP
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add papers README.md download_status_36_55.csv Traffic_Papers_References_36-55.zip
+          if git diff --cached --quiet; then
+            echo 'No new files to commit.'
+          else
+            git commit -m 'Add open-access papers 36-55 by reference number'
+            git push
+          fi
+
+      - name: Upload downloadable ZIP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Traffic-Papers-References-36-55
+          path: |
+            Traffic_Papers_References_36-55.zip
+            download_status_36_55.csv
+          if-no-files-found: error
+          retention-days: 7
